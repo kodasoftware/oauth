@@ -15,8 +15,8 @@ steps:
     description: Building docker image
     working_directory: ${{clone}}
     dockerfile: dist/Dockerfile
-    image_name: ${{OWNER}}/${{IMAGE}}
-    tag: ${{VERSION}}
+    image_name: '${{OWNER}}/${{IMAGE}}'
+    tag: '${{VERSION}}'
     registry: koda-software
     stage: build
   test:
