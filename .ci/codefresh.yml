@@ -2,7 +2,8 @@ version: '1.0'
 
 stages:
   - clone
-  - build_test
+  - build
+  - test
   - publish
 
 steps:
@@ -24,14 +25,14 @@ steps:
     image_name: ${{OWNER}}/${{IMAGE}}
     tag: ${{VERSION}}
     registry: koda-software
-    stage: build_test
+    stage: build
 
   test:
     title: Test
     image: node:10.17
     description: Running application tests
     working_directory: ${{clone}}
-    stage: build_test
+    stage: test
     commands:
       - cd app
       - npm i
@@ -57,21 +58,3 @@ steps:
     tag: "$(cat package.json | grep '\"version\":' | sed -e 's/  \"version\": \"//' | sed -e 's/\",//')"
     registry: koda-software
     stage: publish
-
-      # readiness:
-      #   image: byrnedo/alpine-curl
-      #   timeoutSeconds: 1
-      #   commands:
-      #     - curl pubsub:8085
-  # build:
-  #   type: build
-  #   title: Build
-  #   description: Building docker image
-  #   working_directory: ${{clone}}
-  #   dockerfile: dist/Dockerfile
-  #   image_name: ${{REPO}}/${{OWNER}}/${{}}
-  #   commands:
-  #     - npm install
-  #     - npm test
-  #     - npm run build
-  #   stage: build
