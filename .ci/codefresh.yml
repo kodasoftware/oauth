@@ -1,7 +1,7 @@
 version: '1.0'
 
 stages:
-  - setup
+  - clone
   - build_test
   - publish
 
@@ -13,7 +13,7 @@ steps:
     repo: ${{CF_REPO_OWNER}}/${{CF_REPO_NAME}}
     revision: ${{CF_BRANCH}}
     git: github
-    stage: setup
+    stage: clone
 
   build:
     type: build
