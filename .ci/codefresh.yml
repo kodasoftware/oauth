@@ -1,21 +1,14 @@
 version: '1.0'
 
-stages:
-  - clone
-  - build
-  - test
-  - publish
-
 steps:
   clone:
     type: git-clone
     title: Clone project
     description: Cloning project from source repository
-    repo: ${{CF_REPO_OWNER}}/${{CF_REPO_NAME}}
+    repo: '${{CF_REPO_OWNER}}/${{CF_REPO_NAME}}'
     revision: ${{CF_BRANCH}}
     git: github
     stage: clone
-
   build:
     type: build
     title: Build
@@ -26,7 +19,6 @@ steps:
     tag: ${{VERSION}}
     registry: koda-software
     stage: build
-
   test:
     title: Test
     image: node:10.17
@@ -41,15 +33,10 @@ steps:
     services:
       composition:
         pubsub:
-          title: gcloud
-          description: Google Cloud SDK
           image: google/cloud-sdk
-          commands:
-            - gcloud components install pubsub-emulator
-            - gcloud components update
+          command: gcloud components install pubsub-emulator && gcloud components update && gcloud beta emulators pubsub start
           ports:
             - 8085
-  
   publish:
     type: push
     title: Publish
@@ -58,3 +45,9 @@ steps:
     tag: "$(cat package.json | grep '\"version\":' | sed -e 's/  \"version\": \"//' | sed -e 's/\",//')"
     registry: koda-software
     stage: publish
+
+stages:
+  - clone
+  - build
+  - test
+  - publish
