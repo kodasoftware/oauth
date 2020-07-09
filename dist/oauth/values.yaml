@@ -1,0 +1,64 @@
+namespace: dev
+
+deployments:
+  - name: oauth
+    replicas: 1
+    strategy:
+      type: RollingUpdate
+      rollingUpdate:
+        maxSurge: 1
+        maxUnavailable: 0
+    restartPolicy: Always
+    containers:
+      - name: oauth
+        image:
+          name: gcr.io/koda-software/oauth
+          pullPolicy: Always
+        livenessProbe:
+          httpGet:
+            path: /ping
+            port: 9000
+          initialDelaySeconds: 3
+          timeoutSeconds: 1
+        readinessProbe:
+          httpGet:
+            path: /ping
+            port: 9000
+          initialDelaySeconds: 3
+          timeoutSeconds: 1
+        envFrom:
+          - configMapRef:
+              name: oauth
+        ports:
+          - containerPort: 9000
+            name: http
+
+services:
+  - name: oauth
+    type: NodePort
+    annotations:
+      # Comment out the backend config below to revoke it if deployed into a cluster
+      beta.cloud.google.com/backend-config: '{"default":"http","ports":{"80":"http"}}'
+      cloud.google.com/app-protocols: '{"http":"HTTP"}'
+    ports:
+      - name: http
+        port: 80
+        targetPort: 9000
+
+jobs:
+  - name: oauth-migration
+    containers:
+      - name: oauth
+        image:
+          name: gcr.io/koda-software/oauth
+          pullPolicy: Always
+        command:
+          - sh
+          - -c
+          - "npx knex migrate:latest"
+        envFrom:
+          - configMapRef:
+              name: oauth
+        ports:
+          - containerPort: 9000
+            name: http

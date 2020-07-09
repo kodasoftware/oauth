@@ -1,0 +1,63 @@
+{{- range .Values.deployments }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .name }}
+  labels:
+    app: {{ .Chart.Name }}
+    app.kubernetes.io/name: {{ template "name" . }}
+    helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version \| replace "+" "_" }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/version: {{ .Chart.AppVersion }}
+    app.kubernetes.io/component: {{ .name }}
+    app.kubernetes.io/part-of: {{ .Chart.Name }}
+spec:
+  replicas: {{ .replicas | default 1 }}
+  selector:
+    matchLabels:
+      app: {{ .Chart.Name }}
+      app.kubernetes.io/name: {{ template "name" . }}
+      helm.sh/chart: {{ .Chart.Name }}-{{ .Chart.Version \| replace "+" "_" }}
+      app.kubernetes.io/managed-by: {{ .Release.Service }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
+      app.kubernetes.io/version: {{ .Chart.AppVersion }}
+  strategy:
+    {{ required .strategy }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Chart.Name }}
+    spec:
+      restartPolicy: {{ required .restartPolicy }}
+      containers:
+        {{- range required .containers }}
+        - name: {{ required .name }}
+          image: {{ required .image.name | quote }}
+          imagePullPolicy: {{ required .image.pullPolicy }}
+          {{- if .resources }}
+          resources:
+            {{ .resources }}
+          {{- end }}
+          {{- if .livenessProbe }}
+          livenessProbe:
+            {{ .livenessProbe }}
+          {{- end }}
+          {{- if .readinessProbe }}
+          readinessProbe:
+            {{ .readinessProbe }}
+          {{- end }}
+          {{- if .env }}
+          env:
+            {{ .env }}
+          {{- end }}
+          {{- if .envFrom }}
+          envFrom:
+            {{ .envFrom }}
+          {{- end }}
+          {{- if .ports }}
+          ports:
+            {{ .ports }}
+          {{- end }}
+        {{- end }}
+{{- end }}

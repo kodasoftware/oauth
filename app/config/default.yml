@@ -1,0 +1,61 @@
+app:
+  name: oAuth API
+  port: 9000
+
+log:
+  level: debug
+
+google:
+  clientId: your-google-client-id
+  clientSecret: your-google-client-secret
+
+facebook:
+  apiVersion: v7.0
+  id: your-facebook-id
+  secret: your-facebook-secret
+  token: your-facebook-token
+
+database:
+  client: sqlite3
+  connectionTimeout: 10000
+  connection:
+    filename: ./test/testdb.sqlite
+  pool:
+    min: 0
+    max: 2
+  migrations:
+    directory: src/database/migs
+    extension: ts
+    tableName: knex_migs
+    loadExtensions: 
+      - .ts
+      - .js
+  seeds:
+    directory: src/database/seeds
+
+crypto:
+  secret: pacopaco
+
+jwt:
+  secret: pacopaco
+  durationSecs: 86400
+  refreshDurationSecs: 3600
+  resetDurationSecs: 3600
+
+cookie:
+  keys:
+    - pacopaco
+    - paco
+  opts:
+    signed: true
+    path: /
+    httpOnly: true
+    secure: false
+    overwrite: true
+    sameSite: true
+
+pubsub:
+  opts:
+    projectId: project-id
+    apiEndpoint: localhost:8085
+  topic: mailer.send

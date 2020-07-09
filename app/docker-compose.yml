@@ -1,0 +1,28 @@
+version: '3.1'
+
+services:
+  pubsub:
+    image: google/cloud-sdk
+    restart: always
+    command:
+      - sh
+      - -c
+      - "apt-get install google-cloud-sdk-pubsub-emulator && \
+        gcloud beta emulators pubsub start --project=project-id"
+    ports:
+      - 8085:8085
+  db:
+    image: postgres:12.2-alpine
+    restart: always
+    environment:
+      POSTGRES_USER: oauth
+      POSTGRES_PASSWORD: root
+    ports:
+      - 5432:5432
+  oauth:
+    build:
+      dockerfile: ../dist/Dockerfile
+      context: ../
+      args:
+        NPM_TOKEN: $NPM_TOKEN
+    image: gcr.io./koda-software/oauth:local

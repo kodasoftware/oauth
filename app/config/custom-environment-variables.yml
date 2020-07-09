@@ -1,0 +1,60 @@
+app:
+  name: APP_NAME
+  port: APP_PORT
+
+log:
+  level: LOG_LEVEL
+
+google:
+  clientId: GOOGLE_CLIENT_ID
+  clientSecret: GOOGLE_CLIENT_SECRET
+
+facebook:
+  apiVersion: FACEBOOK_API_VERSION
+  id: FACEBOOK_APP_ID
+  secret: FACEBOOK_APP_SECRET
+  token: FACEBOOK_APP_TOKEN
+
+database:
+  client: DB_CLIENT
+  connectionTimeout: DB_CONNECTION_TIMEOUT
+  connection:
+    host: DB_CONNECTION_HOST
+    user: DB_CONNECTION_USER
+    password: DB_CONNECTION_PASSWORD
+    database: DB_CONNECTION_DATABASE
+  pool:
+    min: DB_POOL_MIN
+    max: DB_POOL_MAX
+  migrations:
+    directory: DB_MIGRATIONS_DIR
+    extension: DB_MIGRATIONS_EXT
+    tableName: DB_MIGRATIONS_TABLE
+    loadExtensions: 
+      __name: DB_MIGRATIONS_LOAD_EXTS
+      __format: map
+  seeds:
+    directory: DB_SEEDS_DIR
+
+crypto:
+  secret: CRYPTO_SECRET
+
+jwt:
+  secret: JWT_SECRET
+  durationSecs: JWT_DURATION_SECS
+  refreshDurationSecs: JWT_REFRESH_DURATION_SECS
+  resetDurationSecs: JWT_RESET_DURATION_SECS
+
+cookie:
+  keys:
+    __name: COOKIE_KEYS
+    __format: map
+  opts:
+    __name: COOKIE_OPTS
+    __format: json
+
+pubsub:
+  opts:
+    __name: PUBSUB_OPTS
+    __format: json
+  topic: PUBSUB_TOPIC

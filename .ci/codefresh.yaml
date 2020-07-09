@@ -1,0 +1,76 @@
+version: '1.0'
+
+stages:
+  - setup
+  - build_test
+  - publish
+
+steps:
+  clone:
+    type: git-clone
+    title: Clone project
+    description: Cloning project from source repository
+    repo: ${{CF_REPO_OWNER}}/${{CF_REPO_NAME}}
+    revision: ${{CF_BRANCH}}
+    git: github
+    stage: setup
+
+  build:
+    type: build
+    title: Build
+    description: Building docker image
+    working_directory: ${{clone}}
+    dockerfile: dist/Dockerfile
+    image_name: ${{OWNER}}/${{IMAGE}}
+    tag: ${{VERSION}}
+    stage: build_test
+
+  test:
+    title: Test
+    image: node:10.17
+    description: Running application tests
+    working_directory: ${{clone}}
+    stage: build_test
+    commands:
+      - cd app
+      - npm i
+      - NODE_ENV=test npx knex migrate:latest
+      - npm t
+    services:
+      composition:
+        pubsub:
+          title: gcloud
+          description: Google Cloud SDK
+          image: google/cloud-sdk
+          commands:
+            - gcloud components install pubsub-emulator
+            - gcloud components update
+          ports:
+            - 8085
+  
+  publish:
+    type: push
+    title: Publish
+    description: Publish docker image
+    candidate: ${{build}}
+    tag: "$(cat package.json | grep '\"version\":' | sed -e 's/  \"version\": \"//' | sed -e 's/\",//')"
+    registry: koda-software
+    stage: publish
+
+      # readiness:
+      #   image: byrnedo/alpine-curl
+      #   timeoutSeconds: 1
+      #   commands:
+      #     - curl pubsub:8085
+  # build:
+  #   type: build
+  #   title: Build
+  #   description: Building docker image
+  #   working_directory: ${{clone}}
+  #   dockerfile: dist/Dockerfile
+  #   image_name: ${{REPO}}/${{OWNER}}/${{}}
+  #   commands:
+  #     - npm install
+  #     - npm test
+  #     - npm run build
+  #   stage: build
