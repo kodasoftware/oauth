@@ -48,6 +48,6 @@ steps:
 
 stages:
   - clone
-  - build
   - test
+  - build
   - publish
