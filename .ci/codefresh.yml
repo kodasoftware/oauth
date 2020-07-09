@@ -23,6 +23,7 @@ steps:
     dockerfile: dist/Dockerfile
     image_name: ${{OWNER}}/${{IMAGE}}
     tag: ${{VERSION}}
+    registry: koda-software
     stage: build_test
 
   test:
