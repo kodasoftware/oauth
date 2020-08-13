@@ -7,7 +7,7 @@ import deleteAuth from '../middleware/delete-auth'
 
 const router = route('createAuth', 'post', '/', [createAuthMiddleware]);
 route('getForgottenAuth', 'get', '/', [forgottenAuth], { router })
-route('updateAuth', 'patch', '/', [updateAuth], { router })
+route('updateAuth', 'put', '/', [updateAuth], { router })
 route('deleteAuth', 'delete', '/', [deleteAuth], { router })
 
 export default router

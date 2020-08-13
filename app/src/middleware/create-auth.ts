@@ -14,6 +14,7 @@ export default compose<AuthContext>([
           maxLength: 18,
           pattern: '^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\\$%\\^&\\*])(?=.{6,18})',
         },
+        additionalProperties: true,
       },
       required: ['email', 'password'],
     }, {
@@ -22,6 +23,7 @@ export default compose<AuthContext>([
         type: { type: 'string', enum: ['facebook', 'google'] },
         token: { type: 'string', minLength: 1 }
       },
+      additionalProperties: true,
       required: ['token', 'type']
     }],
   }),

@@ -1,6 +1,20 @@
 app:
   name: oAuth API
   port: 9000
+  cors:
+    origin: 'http://localhost:3000'
+    allowMethods:
+      - GET
+      - HEAD
+      - PUT
+      - POST
+      - DELETE
+      - PATCH
+      - OPTIONS
+    exposeHeaders: '*'
+    # allowHeaders: '*'
+    credentials: true
+    keepHeadersOnError: false
 
 log:
   level: debug
@@ -16,17 +30,22 @@ facebook:
   token: your-facebook-token
 
 database:
-  client: sqlite3
+  client: pg
   connectionTimeout: 10000
   connection:
-    filename: ./test/testdb.sqlite
+    # filename: ./test/testdb.sqlite
+    host: localhost
+    port: 5432
+    user: brewers
+    password: root
+    database: brewers
   pool:
-    min: 0
+    min: 1
     max: 2
   migrations:
     directory: src/database/migs
     extension: ts
-    tableName: knex_migs
+    tableName: knex_oauth_migs
     loadExtensions: 
       - .ts
       - .js
@@ -38,9 +57,9 @@ crypto:
 
 jwt:
   secret: pacopaco
-  durationSecs: 86400
-  refreshDurationSecs: 3600
-  resetDurationSecs: 3600
+  durationSecs: 10 # 1 hour
+  refreshDurationSecs: 86400 # 24 hours
+  resetDurationSecs: 86400 # 24 hours
 
 cookie:
   keys:
@@ -58,4 +77,4 @@ pubsub:
   opts:
     projectId: project-id
     apiEndpoint: localhost:8085
-  topic: mailer.send
+  topic: mail.generate

@@ -15,7 +15,7 @@ export class Auth extends Model<AuthRecord, AuthJson> {
   ): (repository: Repository) => Promise<Auth> {
     return async (repository: Repository) => {
       try {
-        const auth = new Auth(repository, email, false, password, salt, deleted)
+        const auth = new Auth(repository, email.toLowerCase(), false, password, salt, deleted)
         await auth.save()
         return auth
       } catch (err) {
@@ -26,7 +26,7 @@ export class Auth extends Model<AuthRecord, AuthJson> {
   }
   public static find(email: string): (repository: Repository) => Promise<Auth> {
     return async (repository: Repository) => {
-      const result = await repository.find<AuthRecord>(Auth.TABLE, { email })
+      const result = await repository.find<AuthRecord>(Auth.TABLE, { email: email.toLowerCase() })
       if (!result) {
         return null
       }
@@ -57,7 +57,7 @@ export class Auth extends Model<AuthRecord, AuthJson> {
   toRecord() {
     return {
       id: this.id,
-      email: this.email,
+      email: this.email.toLowerCase(),
       verified: this.verified,
       password: this.password,
       salt: this.salt,

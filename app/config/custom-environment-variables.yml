@@ -1,6 +1,9 @@
 app:
   name: APP_NAME
   port: APP_PORT
+  cors:
+    __name: APP_CORS
+    __format: json
 
 log:
   level: LOG_LEVEL
@@ -32,7 +35,7 @@ database:
     tableName: DB_MIGRATIONS_TABLE
     loadExtensions: 
       __name: DB_MIGRATIONS_LOAD_EXTS
-      __format: map
+      __format: json
   seeds:
     directory: DB_SEEDS_DIR
 
@@ -48,7 +51,7 @@ jwt:
 cookie:
   keys:
     __name: COOKIE_KEYS
-    __format: map
+    __format: json
   opts:
     __name: COOKIE_OPTS
     __format: json

@@ -1,29 +1,26 @@
-####### Staging #######
-FROM node:10.17-alpine AS staging
-
-ARG NPM_TOKEN
+####### Build #######
+FROM node:10.17 AS build
 
 WORKDIR /opt/app
+
 COPY ./app/ ./
+
 RUN npm set progress=false && \
-    npm config set depth 0 && \
-    npm install
+    npm config set depth 0
+RUN npm i
 RUN npm run compile
 
 
-####### Production #######
-FROM node:10.17-alpine
-
-ARG NPM_TOKEN
+####### Runtime #######
+FROM node:10.17 AS runtime
 
 WORKDIR /opt/app
-COPY --from=staging /opt/app/build/ ./
-COPY --from=staging /opt/app/config ./config
-COPY --from=staging /opt/app/scripts ./scripts
+
+COPY --from=build /opt/app/build/ ./
+
 RUN npm set progress=false && \
     npm config set depth 0 && \
-    npm i --production && \
-    npm cache clean
+    npm i --production
 RUN chmod -R +x /opt/app/scripts
 
 CMD ["/bin/sh", "./scripts/run.sh"]

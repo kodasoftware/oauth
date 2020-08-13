@@ -1,0 +1,33 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: oauth-migrations
+  labels:
+    app: oauth-migrations
+spec:
+  backoffLimit: 6
+  completions: 1
+  parallelism: 1
+  ttlSecondsAfterFinished: 5
+  template:
+    metadata:
+      name: oauth-migrations
+      labels:
+        app: oauth-migrations
+    spec:
+      containers:
+        - name: oauth-migrations
+          image: gcr.io/koda-software/oauth
+          imagePullPolicy: IfNotPresent
+          command:
+            - sh
+            - -c
+            - npx knex migrate:latest
+          envFrom:
+            - configMapRef:
+                name: oauth-env-vars
+                optional: false
+            - secretRef:
+                name: oauth-secrets
+                optional: false
+      restartPolicy: OnFailure

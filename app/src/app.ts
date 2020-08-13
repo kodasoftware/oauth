@@ -21,7 +21,10 @@ export function attachAuthContext(koa: Koa): Koa {
     token: new TokenService(),
   }
   koa.keys = config.cookie.keys
-  koa.use(middleware.composedMiddlewares(config.app.name, config.log.level))
+  koa.use(middleware.composedMiddlewares(config.app.name, config.log.level, null, { 
+    body: { includeUnparsed: false },
+    cors: config.app.cors,
+  }))
   return koa
 }
 

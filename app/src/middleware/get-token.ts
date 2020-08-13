@@ -50,7 +50,9 @@ export default compose<AuthContext>([
 
     ctx.body = {
       token: tokenResponse.accessToken,
-      expiresAt: new Date(tokenResponse.refreshExpiry * 1000).toISOString() }
+      expiresAt: new Date(tokenResponse.accessTokenExpiry * 1000).toISOString(),
+      expiresInMs: Date.now()
+    }
     ctx.cookies.set('refresh_token', tokenResponse.refreshToken, {
       http_only: true,
       max_age: tokenResponse.refreshExpiry,
