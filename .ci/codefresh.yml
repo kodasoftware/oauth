@@ -33,7 +33,7 @@ steps:
     description: Building docker image
     working_directory: ${{clone}}
     dockerfile: dist/Dockerfile
-    image_name: gcr.io/koda-software/oauth
+    image_name: oauth
     tag: latest
     registry: koda-software
     stage: build
