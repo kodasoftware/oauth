@@ -1,26 +1,26 @@
-import Knex from 'knex';
+import Knex from 'knex'
 
 export default class Repository {
   constructor(
     private readonly knex: Knex,
   ) {}
   public insert<Q>(table: string, data: Q, trx?: Knex.Transaction): Promise<Q> {
-    const now = new Date().toISOString();
+    const now = new Date().toISOString()
     const query = this.knex.table(table).insert({ ...data, created_at: now, updated_at: now }).returning('*') as any
     if (trx) query.transacting(trx)
     return query
   }
 
   public upsert<Q>(
-    table: string, 
-    data: { [key: string]: any }, 
-    fields?: string[], 
+    table: string,
+    data: { [key: string]: any },
+    fields?: string[],
     upsert?: { [key: string]: any },
     trx?: Knex.Transaction
   ): Knex.QueryBuilder<Q,Q> {
-    const now = new Date().toISOString();
+    const now = new Date().toISOString()
     const insert = this.knex.table(table).insert({ ...data, created_at: now, updated_at: now })
-    const conflicts = fields && fields.length > 0 && fields.join(', ') || Object.keys(data).join(', ');
+    const conflicts = fields && fields.length > 0 && fields.join(', ') || Object.keys(data).join(', ')
     const updates = this.knex.update(upsert || data)
     const conflictStmnt = 'ON CONFLICT (' + conflicts + ') DO ' + updates.toQuery() + ', updated_at = \'' + now + '\''
     const query = this.knex.raw(insert.toQuery() + ' ' + conflictStmnt) as any

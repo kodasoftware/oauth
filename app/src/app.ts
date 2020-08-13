@@ -8,20 +8,20 @@ import logger from './logger'
 import ping from './routes/ping'
 import auth from './routes/auth'
 import token from './routes/token'
-import * as knexfile from '../knexfile';
+import * as knexfile from '../knexfile'
 import Knex from 'knex'
 import { AuthService } from './database/service'
 import TokenService from './lib/token'
 
 export function attachAuthContext(koa: Koa): Koa {
-  const kn = Knex(knexfile);
+  const kn = Knex(knexfile)
   koa.context.database = kn
   koa.context.services = {
     auth: new AuthService(kn),
     token: new TokenService(),
   }
   koa.keys = config.cookie.keys
-  koa.use(middleware.composedMiddlewares(config.app.name, config.log.level, null, { 
+  koa.use(middleware.composedMiddlewares(config.app.name, config.log.level, null, {
     body: { includeUnparsed: false },
     cors: config.app.cors,
   }))
@@ -44,6 +44,6 @@ export default class App {
     logger.info(config.app.name + ' service listening on port ' + config.app.port)
   }
   close() {
-    this.server && this.server.close()
+    if (this.server) this.server.close()
   }
 }

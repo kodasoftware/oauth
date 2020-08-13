@@ -119,7 +119,7 @@ describe('Auth Service', () => {
         status.should.be.eql(200)
         should.not.exist(error)
         auth.email.should.be.eql(email)
-  
+
       })
       it('should not verify email exists', async () => {
         const { status, error, auth } = await SERVICE.verifyEmailExists(CHANCE.email())

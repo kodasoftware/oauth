@@ -33,7 +33,7 @@ describe('deleteAuthMiddleware', () => {
     const response = await requestPromise(URL, {
       method: 'delete',
       headers: { Authorization: 'Bearer ' + token.accessToken },
-      json: true, 
+      json: true,
       resolveWithFullResponse: true })
     response.statusCode.should.be.eql(200)
     const record = await KNEX.from(Auth.TABLE).where({ email }).first()

@@ -40,7 +40,7 @@ export default compose<AuthContext>([
       ctx.status = 400
       return
     }
-    
+
     const { status, error } = response
     ctx.status = status
     if (error) ctx.body = error

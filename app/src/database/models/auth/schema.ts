@@ -8,4 +8,4 @@ export interface AuthRecord {
   deleted: boolean,
 }
 
-export interface AuthJson {}
+export interface AuthJson {} // tslint:disable-line

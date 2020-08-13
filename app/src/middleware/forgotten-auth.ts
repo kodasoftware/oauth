@@ -25,7 +25,7 @@ export default compose<AuthContext>([
     const data = {
       from: `"Example App" <foo@example.com>`, // sender address
       to: auth.email,
-      subject: "Forgotten Password Request", // Subject line
+      subject: 'Forgotten Password Request', // Subject line
       text: resetResponse.resetToken, // plain text body
       html: resetResponse.resetToken,
     }

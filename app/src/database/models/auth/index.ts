@@ -8,9 +8,9 @@ export class Auth extends Model<AuthRecord, AuthJson> {
   public static TABLE = 'auth'
   public static CONFLICTS = ['id']
   public static create(
-    email: string, 
-    password: string, 
-    salt: string, 
+    email: string,
+    password: string,
+    salt: string,
     deleted: boolean,
   ): (repository: Repository) => Promise<Auth> {
     return async (repository: Repository) => {

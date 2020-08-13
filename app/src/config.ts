@@ -1,3 +1,3 @@
-import config from 'config';
+import config from 'config'
 
-export default config.util.toObject();
+export default config.util.toObject()

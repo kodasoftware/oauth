@@ -6,7 +6,7 @@ FB.options({ version: config.facebook.apiVersion })
 FB.setAccessToken(config.facebook.token)
 
 export async function validateToken(user_access_token: string): Promise<any> {
-  
+
   try {
     const { data } = await FB.api('debug_token', { input_token: user_access_token })
     if (data) {

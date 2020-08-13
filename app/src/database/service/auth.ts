@@ -25,7 +25,7 @@ export class AuthService {
       const auth = await Auth.find(email)(this.repository)
       if (!auth) return { status: 404 }
       if (!auth.deleted && auth.id === id) return { status: 200, auth }
-      
+
       return { status: 401 } as any
     } catch (err) {
       logger.error(err)
@@ -41,7 +41,7 @@ export class AuthService {
 
       if (!auth) return { status: 404 }
       if (!auth.deleted) return { status: 200, auth }
-      
+
       return { status: 401 } as any
     } catch (err) {
       logger.error(err)
@@ -73,7 +73,7 @@ export class AuthService {
       }
       if (existing && existing.deleted && await this.compare(password, existing.password)) {
         existing.deleted = false
-        await existing.save();
+        await existing.save()
         return { status: 201, auth: existing }
       }
       const { salt, encrypted } = await this.encrypt(password)
@@ -98,7 +98,7 @@ export class AuthService {
         }
         if (existing && existing.deleted) {
           existing.deleted = false
-          await existing.save();
+          await existing.save()
           return { status: 201, auth: existing }
         }
         const auth = await Auth.create(email, null, null, false)(this.repository)
@@ -153,7 +153,7 @@ export class AuthService {
     }
   }
 
-  protected compare(password: string, encrypted: string): Promise<Boolean> {
+  protected compare(password: string, encrypted: string): Promise<boolean> {
     return bcrypt.compare(password, encrypted)
   }
 

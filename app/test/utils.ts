@@ -18,7 +18,7 @@ export async function createPubSubTopic() {
     await pubsub.createTopic(config.pubsub.topic)
   } catch (err) {
     if (err.code === 6) return
-    console.error(err)
+    console.error(err) // tslint:disable-line
     throw err
   }
 }
@@ -30,7 +30,7 @@ export async function createPubSubSubscription(name) {
     return subscription
   } catch (err) {
     if (err.code === 6) return
-    console.error(err)
+    console.error(err) // tslint:disable-line
     throw err
   }
 }
@@ -43,7 +43,7 @@ export async function createPubSubPushSubscription(name, port) {
     return subscription
   } catch (err) {
     if (err.code === 6) return
-    console.error(err)
+    console.error(err) // tslint:disable-line
     throw err
   }
 }
@@ -52,18 +52,18 @@ export async function listenForMessage(subscriptionName, callback = null, timeou
   const pubsub = new PubSub(config.pubsub.opts)
   const subscription = pubsub.subscription(subscriptionName)
   const messageHandler = (message) => {
-    logger.debug(`Received message ${message.id}:`);
-    logger.debug(`\tData: ${message.data}`);
-    logger.debug(`\tAttributes: ${message.attributes}`);
+    logger.debug(`Received message ${message.id}:`)
+    logger.debug(`\tData: ${message.data}`)
+    logger.debug(`\tAttributes: ${message.attributes}`)
     if (callback) callback(message)
     // "Ack" (acknowledge receipt of) the message
-    message.ack();
+    message.ack()
   }
   subscription.on('message', messageHandler)
 
   await setTimeout(() => {
-    subscription.removeListener('message', messageHandler);
-  }, timeout * 1000);
+    subscription.removeListener('message', messageHandler)
+  }, timeout * 1000)
 }
 
 export function createPubSubSubscriber() {
