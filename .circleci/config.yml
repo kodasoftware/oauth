@@ -137,16 +137,19 @@ commands:
   lint:
     steps:
       - run: |
+          cd app
           npm i
           npm run lint
   compile:
     steps:
       - run: |
+          cd app
           npm i
           npm run compile
   test:
     steps:
       - run: |
+          cd app
           npm i
           npm test
 
