@@ -9,16 +9,6 @@ steps:
     revision: ${{CF_BRANCH}}
     git: github
     stage: clone
-  build:
-    type: build
-    title: Build
-    description: Building docker image
-    working_directory: ${{clone}}
-    dockerfile: dist/Dockerfile
-    image_name: gcr.io/koda-software/oauth
-    tag: latest
-    registry: koda-software
-    stage: build
   test:
     title: Test
     image: node:10.17
@@ -37,6 +27,16 @@ steps:
           command: gcloud components install pubsub-emulator && gcloud components update && gcloud beta emulators pubsub start
           ports:
             - 8085
+  build:
+    type: build
+    title: Build
+    description: Building docker image
+    working_directory: ${{clone}}
+    dockerfile: dist/Dockerfile
+    image_name: gcr.io/koda-software/oauth
+    tag: latest
+    registry: koda-software
+    stage: build
   publish:
     type: push
     title: Publish
