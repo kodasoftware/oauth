@@ -161,7 +161,9 @@ commands:
           command: |
             cd app
             docker-compose up -d
-            sleep 10
+            echo "Sleeping for a few seconds to await DB warmup"
+            sleep 20
+            echo "Finished sleeping. Now resuming tests"
             npm i
             npm test
 
