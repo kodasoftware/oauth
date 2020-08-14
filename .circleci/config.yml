@@ -161,6 +161,7 @@ commands:
           command: |
             cd app
             docker-compose up -d
+            sleep 10
             npm i
             npm test
 
