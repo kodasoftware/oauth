@@ -34,6 +34,8 @@ jobs:
     executor: node
     steps:
       - checkout
+      - setup_remote_docker
+      - install_docker_compose
       - compile
       - lint
       - test
@@ -123,7 +125,9 @@ commands:
   # 
   dependencies:
     steps:
-      - run: |
+      - run: 
+          name: Install dependencies
+          command: |
           # Install dependencies
           apt-get update
           apt -y install git dnsutils
@@ -136,22 +140,29 @@ commands:
   # 
   lint:
     steps:
-      - run: |
-          cd app
-          npm i
-          npm run lint
+      - run:
+          name: Lint
+          command: |
+            cd app
+            npm i
+            npm run lint
   compile:
     steps:
-      - run: |
-          cd app
-          npm i
-          npm run compile
+      - run:
+          name: Compile
+          command: |
+            cd app
+            npm i
+            npm run compile
   test:
     steps:
-      - run: |
-          cd app
-          npm i
-          npm test
+      - run: 
+          name: Test
+          command: |
+            cd app
+            docker-compose up -d
+            npm i
+            npm test
 
   #
   # Docker (with node) commands
@@ -163,7 +174,9 @@ commands:
       hostname:
         type: string
     steps:
-      - run: docker login -u _json_key  -p "<< parameters.token >>" https://<< parameters.hostname >>
+      - run: 
+          name: Docker login
+          command: docker login -u _json_key  -p "<< parameters.token >>" https://<< parameters.hostname >>
   docker_build:
     parameters:
       hostname:
@@ -178,11 +191,13 @@ commands:
         type: string
         default: "."
     steps:
-      - run: |
-          docker build -t \
-            << parameters.hostname >>/<< parameters.project_id >>/<< parameters.image >>:$(cat package.json | grep '\"version\":' | sed -e 's/  \"version\": \"//' | sed -e 's/\",//') \
-            -f << parameters.dockerfile_path >> \
-            << parameters.context >>
+      - run: 
+          name: Docker build
+          command: |
+            docker build -t \
+              << parameters.hostname >>/<< parameters.project_id >>/<< parameters.image >>:$(cat package.json | grep '\"version\":' | sed -e 's/  \"version\": \"//' | sed -e 's/\",//') \
+              -f << parameters.dockerfile_path >> \
+              << parameters.context >>
   docker_push:
     parameters:
       hostname:
@@ -192,8 +207,19 @@ commands:
       image:
         type: string
     steps:
-      - run: |
-          docker push << parameters.hostname>>/<< parameters.project_id >>/<< parameters.image >>:$(cat package.json | grep '\"version\":' | sed -e 's/  \"version\": \"//' | sed -e 's/\",//')
+      - run:
+          name: Docker push
+          command: |
+            docker push << parameters.hostname>>/<< parameters.project_id >>/<< parameters.image >>:$(cat package.json | grep '\"version\":' | sed -e 's/  \"version\": \"//' | sed -e 's/\",//')
+
+  install_docker_compose:
+    steps:
+      - run:
+          name: Install Docker Compose
+          command: |
+            set -x
+            curl -L https://github.com/docker/compose/releases/download/1.25.3/docker-compose-`uname -s`-`uname -m` > /usr/local/bin/docker-compose
+            chmod +x /usr/local/bin/docker-compose
 
   # publish:
   #   parameters:
@@ -223,22 +249,27 @@ commands:
       author:
         type: string
     steps:
-      - run: |
-          git config user.email << parameters.email >> && git config user.name << parameters.author >>
-          ssh-keyscan github.com >> ~/.ssh/known_hosts
+      - run:
+          name: Git configuration
+          command: |
+            git config user.email << parameters.email >> && git config user.name << parameters.author >>
+            ssh-keyscan github.com >> ~/.ssh/known_hosts
   git_tag:
     parameters:
       when:
         type: string
         default: on_success
     steps:
-      - run: 
+      - run:
+          name: Git tag
           command: |
             git tag -f $(cat package.json | grep '\"version\":' | sed -e 's/  \"version\": \"//' | sed -e 's/\",//')
           when: << parameters.when >>
   git_push_tags:
     steps:
-      - run: git push -f --tags
+      - run:
+          name: Git push tags
+          command: git push -f --tags
   git_commit:
     parameters:
       message:
@@ -254,13 +285,16 @@ commands:
         default: on_success
     steps:
       - run: 
+          name: Git commit
           command: |
             git add -A
             git diff-index --quiet HEAD || git commit -am "<< parameters.message >>"
           when: << parameters.when >>
   git_push:
     steps:
-      - run: git push origin HEAD:master
+      - run: 
+          name: Git push
+          command: git push origin HEAD:master
 
   # 
   # gcloud commands

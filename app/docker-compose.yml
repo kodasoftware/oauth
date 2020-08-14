@@ -19,10 +19,10 @@ services:
       POSTGRES_PASSWORD: root
     ports:
       - 5432:5432
-  oauth:
-    build:
-      dockerfile: ../dist/Dockerfile
-      context: ../
-      args:
-        NPM_TOKEN: $NPM_TOKEN
-    image: gcr.io./koda-software/oauth:local
+  # oauth:
+  #   build:
+  #     dockerfile: ../dist/Dockerfile
+  #     context: ../
+  #     args:
+  #       NPM_TOKEN: $NPM_TOKEN
+  #   image: gcr.io./koda-software/oauth:local
