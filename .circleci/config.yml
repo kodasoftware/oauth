@@ -128,12 +128,12 @@ commands:
       - run: 
           name: Install dependencies
           command: |
-          # Install dependencies
-          apt-get update
-          apt -y install git dnsutils
-          sed -ie 's/# Host/Host/' /etc/ssh/ssh_config
-          sed -ie 's/#   ForwardAgent/  ForwardAgent/' /etc/ssh/ssh_config
-          sed -ie 's/  ForwardAgent no/  ForwardAgent yes/' /etc/ssh/ssh_config
+            # Install dependencies
+            apt-get update
+            apt -y install git dnsutils
+            sed -ie 's/# Host/Host/' /etc/ssh/ssh_config
+            sed -ie 's/#   ForwardAgent/  ForwardAgent/' /etc/ssh/ssh_config
+            sed -ie 's/  ForwardAgent no/  ForwardAgent yes/' /etc/ssh/ssh_config
 
   # 
   # npm commands
