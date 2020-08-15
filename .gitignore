@@ -67,4 +67,4 @@ build
 config/test.yml
 
 # Test sqlite db
-test/testdb.sqlite
+*.sqlite
