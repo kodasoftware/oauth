@@ -3,7 +3,6 @@ import config from '../config'
 
 export default async function refreshTokenMiddleware(ctx: AuthContext) {
   const refreshToken = ctx.cookies.get('refresh_token', config.cookie.opts)
-  console.log(refreshToken)
   if (!refreshToken) {
     ctx.status = 401
     return
