@@ -37,7 +37,7 @@ describe('deleteAuthMiddleware', () => {
       resolveWithFullResponse: true })
     response.statusCode.should.be.eql(200)
     const record = await KNEX.from(Auth.TABLE).where({ email }).first()
-    record.deleted.should.be.eql(1)
+    Boolean(record.deleted).should.be.eql(true)
   })
   it('should return 404 for an unknown email', async () => {
     token = await APP.context.services.token.createTokenFromAuth({ id: CHANCE.guid(), email: CHANCE.email() })
