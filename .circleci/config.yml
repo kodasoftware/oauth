@@ -36,9 +36,9 @@ jobs:
       - checkout
       # - install_docker_compose
       # - setup_remote_docker
-      - machine_deps
       - compile
       - lint
+      - machine_deps
       - test
   publish:
     executor: gcloud
@@ -143,7 +143,7 @@ commands:
           name: Install dependencies
           command: |
             # Update node
-            nvm use 10.17
+            nvm install 10.17
 
   # 
   # npm commands
