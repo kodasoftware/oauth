@@ -17,7 +17,7 @@ services:
     image: postgres:12.2-alpine
     restart: always
     environment:
-      POSTGRES_USER: oauth
+      POSTGRES_USER: brewers
       POSTGRES_PASSWORD: root
     ports:
       - 5432:5432

@@ -184,7 +184,6 @@ commands:
             echo "Sleeping for a few seconds to await DB warmup"
             sleep 20
             echo "Finished sleeping. Now resuming tests"
-            echo "$TEST_CONFIG" > config/test.yml
             npm i
             npm test
 
