@@ -34,8 +34,9 @@ jobs:
     executor: node
     steps:
       - checkout
-      - install_docker_compose
-      - setup_remote_docker
+      # - install_docker_compose
+      # - setup_remote_docker
+      - machine_deps
       - compile
       - lint
       - test
@@ -91,13 +92,15 @@ jobs:
 # 
 executors:
   node:
-    docker:
-      - image: node:10.17
-        name: node_10_17
-        environment:
-          GOOGLE_CREDENTIALS: $GOOGLE_CREDENTIALS
-          GIT_EMAIL: $GIT_EMAIL
-          GIT_NAME: $GIT_NAME
+    machine:
+      image: ubuntu-1604:201903-01
+    # docker:
+    #   - image: node:10.17
+    #     name: node_10_17
+    environment:
+      GOOGLE_CREDENTIALS: $GOOGLE_CREDENTIALS
+      GIT_EMAIL: $GIT_EMAIL
+      GIT_NAME: $GIT_NAME
   gcloud:
     docker:
       - image: google/cloud-sdk
@@ -134,6 +137,13 @@ commands:
             sed -ie 's/# Host/Host/' /etc/ssh/ssh_config
             sed -ie 's/#   ForwardAgent/  ForwardAgent/' /etc/ssh/ssh_config
             sed -ie 's/  ForwardAgent no/  ForwardAgent yes/' /etc/ssh/ssh_config
+  machine_deps:
+    steps:
+      - run:
+          name: Install dependencies
+          command: |
+            # Update node
+            nvm use 10.17
 
   # 
   # npm commands
