@@ -36,6 +36,7 @@ jobs:
       - checkout
       # - install_docker_compose
       # - setup_remote_docker
+      - machine_deps
       - compile
       - lint
       - test
@@ -136,6 +137,16 @@ commands:
             sed -ie 's/# Host/Host/' /etc/ssh/ssh_config
             sed -ie 's/#   ForwardAgent/  ForwardAgent/' /etc/ssh/ssh_config
             sed -ie 's/  ForwardAgent no/  ForwardAgent yes/' /etc/ssh/ssh_config
+  machine_deps:
+    steps:
+      - run:
+          name: Install dependencies
+          command: |
+            # Update node
+            export NVM_DIR=/opt/circleci/.nvm
+            NVM_DIR/install.sh
+            nvm install 10.17
+            nvm use 10.17
 
   # 
   # npm commands
@@ -145,8 +156,6 @@ commands:
       - run:
           name: Lint
           command: |
-            nvm install 10.17
-            nvm use 10.17
             npm i
             npm run lint
   compile:
@@ -154,8 +163,6 @@ commands:
       - run:
           name: Compile
           command: |
-            nvm install 10.17
-            nvm use 10.17
             npm i
             npm run compile
   test:
@@ -167,8 +174,6 @@ commands:
             echo "Sleeping for a few seconds to await DB warmup"
             sleep 20
             echo "Finished sleeping. Now resuming tests"
-            nvm install 10.17
-            nvm use 10.17
             npm i
             npm test
 
