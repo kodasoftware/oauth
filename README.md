@@ -108,7 +108,6 @@ The following environment variables allow you to inject configuration into the o
     The options to pass when setting cookies on responses and reading cookies on requests. Defaults to `{ "signed": true, "path": "/", "httpOnly": true, "secure": false, "overwrite": true, "sameSite": true }`
 
 ## Running tests
-
 ```
 cp config/test.example.yml config/test.yml
 ## Ensure you add working credentials for Google and Facebook OAuth to the config/test.yml configuration
