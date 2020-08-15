@@ -18,13 +18,13 @@ workflows:
           filters:
             branches:
               only: master
-      - hold:
-          type: approval
-          requires:
-            - publish
-      # - deploy:
+      # - hold:
+      #     type: approval
       #     requires:
-      #       - hold
+      #       - publish
+      # # - deploy:
+      # #     requires:
+      # #       - hold
 
 # 
 # Jobs
@@ -34,8 +34,8 @@ jobs:
     executor: node
     steps:
       - checkout
-      - setup_remote_docker
       - install_docker_compose
+      - setup_remote_docker
       - compile
       - lint
       - test
@@ -143,7 +143,6 @@ commands:
       - run:
           name: Lint
           command: |
-            cd app
             npm i
             npm run lint
   compile:
@@ -151,7 +150,6 @@ commands:
       - run:
           name: Compile
           command: |
-            cd app
             npm i
             npm run compile
   test:
@@ -159,7 +157,6 @@ commands:
       - run: 
           name: Test
           command: |
-            cd app
             docker-compose up -d
             echo "Sleeping for a few seconds to await DB warmup"
             sleep 20

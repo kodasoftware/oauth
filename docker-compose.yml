@@ -2,13 +2,8 @@ version: '3.1'
 
 services:
   pubsub:
-    image: google/cloud-sdk
+    image: knarz/pubsub-emulator
     restart: always
-    command:
-      - sh
-      - -c
-      - "apt-get install google-cloud-sdk-pubsub-emulator && \
-        gcloud beta emulators pubsub start --project=project-id"
     ports:
       - 8085:8085
   db:
@@ -19,6 +14,7 @@ services:
       POSTGRES_PASSWORD: root
     ports:
       - 5432:5432
+  ## Uncomment the lines below to also run the oauth service as part of docker-compose. Useful for local dev/testing
   # oauth:
   #   build:
   #     dockerfile: ../dist/Dockerfile

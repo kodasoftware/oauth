@@ -1,4 +1,5 @@
 import * as should from 'should'
+import getTokenMiddleware from '../../src/middleware/get-token'
 import refreshTokenMiddleware from '../../src/middleware/refresh-token'
 import { attachAuthContext } from '../../src/app'
 import Koa from 'koa'
@@ -7,31 +8,28 @@ import Chance from 'chance'
 import { clearDataset } from '../utils'
 import { Auth } from '../../src/database'
 import requestPromise from 'request-promise'
+import { mount } from '@kodasoftware/koa-bundle/mount'
 
-const APP = attachAuthContext(new Koa()).use(refreshTokenMiddleware)
+const APP = attachAuthContext(new Koa()).use(mount('/token', getTokenMiddleware)).use(refreshTokenMiddleware)
 const KNEX = APP.context.database
 const CHANCE = new Chance()
 const URL = 'http://localhost:' + config.app.port
 
 describe('refreshTokenMiddleware', () => {
   let server
-  let auth
   let email
   let password
-  let token
   before(() => server = APP.listen(config.app.port))
   beforeEach(async () => {
     email = CHANCE.email()
     password = 'aVal1dP@ss'
     await clearDataset([Auth.TABLE])
-    const response = await APP.context.services.auth.createFromEmailPassword(email, password)
-    token = await APP.context.services.token.createTokenFromAuth(response.auth)
-    auth = response.auth
+    await APP.context.services.auth.createFromEmailPassword(email, password)
   })
   after(() => server.close())
   it('should refresh a valid refresh token', async () => {
     const jar = requestPromise.jar()
-    jar.setCookie('refresh_token=' + token.refreshToken, URL, { http: false, secure: false })
+    await requestPromise(URL + '/token', { method: 'POST', body: { email, password }, json: true, jar })
     const response = await requestPromise(URL, { method: 'get', jar, resolveWithFullResponse: true, json: true })
     response.headers.should.have.properties(['set-cookie'])
     response.body.should.have.properties(['token', 'expiresAt'])

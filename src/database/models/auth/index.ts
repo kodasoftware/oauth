@@ -1,5 +1,5 @@
 import { v4 } from 'uuid'
-import Model from '..'
+import Model from '../../models'
 import { AuthRecord, AuthJson } from './schema'
 import logger from '../../../logger'
 import Repository from '../../repository'

@@ -3,7 +3,7 @@ FROM node:10.17 AS build
 
 WORKDIR /opt/app
 
-COPY ./app/ ./
+COPY . .
 
 RUN npm set progress=false && \
     npm config set depth 0

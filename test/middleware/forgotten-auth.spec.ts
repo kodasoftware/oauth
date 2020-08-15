@@ -27,7 +27,7 @@ describe('forgottenAuthMiddleware', () => {
     await clearDataset([Auth.TABLE])
     authResponse = await APP.context.services.auth.createFromEmailPassword(email, password)
   })
-  after(() => server.close())
+  after(() => server && server.close())
   it('should set reset token for forgotten auth', async () => {
     const response = await requestPromise(URL, { qs: { email }, json: true, resolveWithFullResponse: true })
     response.statusCode.should.be.eql(200)

@@ -20,10 +20,10 @@ values will enable the services to speak to one another
 
 ```
 export project_path=/path/to/project
-cd /path/to/project/app
+cd $project_path
 npm i
 docker-compose up -d
-npm start
+npm start # You only need to run npm start if you do not have oauth running as a docker-compose service.
 ```
 
 ## Environment variables
@@ -35,8 +35,10 @@ The following environment variables allow you to inject configuration into the o
     The name of this instance of the API.
   * `APP_PORT`
     The port to bind the API to listen to requests on.
+  * `APP_CORS`
+    The configuration to pass the CORS middleware as a JSON string. See [@koa/cors](https://github.com/koajs/cors) for the full configuration options.
   * `LOG_LEVEL`
-    The log level to set for the log output.
+    The log level to set for the log output. See [Pino](https://github.com/pinojs/pino)
 
 #### Database configuration
   * `DB_CLIENT`
@@ -109,6 +111,8 @@ The following environment variables allow you to inject configuration into the o
 ## Running tests
 
 ```
-npm run pubsub
+cp config/test.example.yml config/test.yml
+## Ensure you add working credentials for Google and Facebook OAuth to the config/test.yml configuration
+docker-compose up -d
 npm t
 ```

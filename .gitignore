@@ -64,4 +64,4 @@ typings/
 build
 
 # configs not to commit
-app/config/test.yml
+config/test.yml
