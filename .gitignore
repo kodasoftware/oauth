@@ -65,3 +65,6 @@ build
 
 # configs not to commit
 config/test.yml
+
+# Test sqlite db
+test/testdb.sqlite

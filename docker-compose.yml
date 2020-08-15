@@ -2,10 +2,17 @@ version: '3.1'
 
 services:
   pubsub:
-    image: knarz/pubsub-emulator
+    image: google/cloud-sdk
     restart: always
+    command:
+      - sh
+      - -c
+      - "apt-get install google-cloud-sdk-pubsub-emulator && \
+        gcloud beta emulators pubsub start --host-port 0.0.0.0:8085"
     ports:
       - 8085:8085
+  ## This can be used for running locally/tests or you can use the sqlite3 plugin and comment this out if you do not
+  ## want to use it.
   db:
     image: postgres:12.2-alpine
     restart: always

@@ -19,10 +19,9 @@ Local development uses a local postgresql database and google cloud sdk image fo
 values will enable the services to speak to one another
 
 ```
-export project_path=/path/to/project
-cd $project_path
 npm i
 docker-compose up -d
+npx knex migrate:latest
 npm start # You only need to run npm start if you do not have oauth running as a docker-compose service.
 ```
 
