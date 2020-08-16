@@ -49,7 +49,7 @@ jobs:
       - dependencies
       - docker_login:
           token: $GOOGLE_CREDENTIALS
-          hostname: $DOCKER_REGISTRY
+          hostname: gcr.io
       - git_config:
           email: $GIT_EMAIL
           author: $GIT_NAME
