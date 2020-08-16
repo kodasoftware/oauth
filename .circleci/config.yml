@@ -121,7 +121,7 @@ commands:
     steps:
       - add_ssh_keys:
           fingerprints:
-            - "$FINGERPRINT"
+            - "0d:78:c3:1c:4b:7f:7f:b4:de:72:34:23:59:33:ef:a8"
 
   # 
   # Dependencies
