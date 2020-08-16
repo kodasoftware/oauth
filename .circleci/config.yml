@@ -55,14 +55,14 @@ jobs:
           author: $GIT_NAME
       - git_tag
       - docker_build:
-          hostname: $DOCKER_REGISTRY
-          project_id: $GCR_PROJECT_ID
-          image: $IMAGE_NAME
+          hostname: gcr.io
+          project_id: koda-software
+          image: oauth
           dockerfile_path: dist/Dockerfile
       - docker_push:
-          hostname: $DOCKER_REGISTRY
-          project_id: $GCR_PROJECT_ID
-          image: $IMAGE_NAME
+          hostname: gcr.io
+          project_id: koda-software
+          image: oauth
       - git_push_tags
   # deploy:
   #   executor: gcloud
