@@ -1,8 +1,8 @@
 app:
   name: oAuth API
   port: 9000
+  prefix: ''
   cors:
-    origin: 'http://localhost:3000'
     allowMethods:
       - GET
       - HEAD
@@ -11,10 +11,7 @@ app:
       - DELETE
       - PATCH
       - OPTIONS
-    exposeHeaders: '*'
-    # allowHeaders: '*'
     credentials: true
-    keepHeadersOnError: false
 
 log:
   level: debug

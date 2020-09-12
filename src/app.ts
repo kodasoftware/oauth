@@ -35,9 +35,9 @@ export default class App {
   constructor() {
     this.koa = attachAuthContext(new Koa())
     this.koa
-      .use(mount('/ping', compose([ping.routes(), ping.allowedMethods()])))
-      .use(mount('/auth', compose([auth.routes(), auth.allowedMethods()])))
-      .use(mount('/token', compose([token.routes(), token.allowedMethods()])))
+      .use(mount(config.app.prefix + '/ping', compose([ping.routes(), ping.allowedMethods()])))
+      .use(mount(config.app.prefix + '/auth', compose([auth.routes(), auth.allowedMethods()])))
+      .use(mount(config.app.prefix + '/token', compose([token.routes(), token.allowedMethods()])))
   }
   async start(port?: string) {
     this.server = this.koa.listen(port || config.app.port)

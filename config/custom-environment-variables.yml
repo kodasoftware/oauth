@@ -1,6 +1,7 @@
 app:
   name: APP_NAME
   port: APP_PORT
+  prefix: APP_PREFIX
   cors:
     __name: APP_CORS
     __format: json

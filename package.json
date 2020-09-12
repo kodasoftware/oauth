@@ -1,6 +1,6 @@
 {
   "name": "oauth",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "",
   "main": "index.js",
   "author": "",
@@ -14,7 +14,7 @@
     "test": "npm run pre-test && npm run test-runner",
     "test:watch": "npm run pre-test && npm run test-runner --watch --watch-files 'test/**/*'",
     "lint": "tslint -c tslint.json 'src/**/*.ts' 'test/**/*.ts'",
-    "lint:fix": "tslint -c tslint.json 'src/**/*.ts' 'test/**/*.ts' --fix",
+    "lint:fix": "npm run lint --fix",
     "build": "tsc -p tsconfig.json --outDir build",
     "compile": "npm run build && npm run post-compile",
     "post-compile": "cp -r package.json package-lock.json config scripts build"
