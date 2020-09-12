@@ -54,9 +54,9 @@ crypto:
 
 jwt:
   secret: pacopaco
-  durationSecs: 10 # 1 hour
-  refreshDurationSecs: 86400 # 24 hours
-  resetDurationSecs: 86400 # 24 hours
+  durationSecs: 3600
+  refreshDurationSecs: 86400
+  resetDurationSecs: 86400
 
 cookie:
   keys:

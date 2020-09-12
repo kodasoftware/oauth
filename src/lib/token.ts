@@ -29,6 +29,8 @@ export default class TokenService {
         exp: refreshExpiry * 1000,
         sub: auth.id,
       }, config.jwt.secret)
+      logger.debug(
+        { status: 200, accessToken, accessTokenExpiry, refreshToken, refreshExpiry }, 'create token from auth')
       return { status: 200, accessToken, accessTokenExpiry, refreshToken, refreshExpiry }
     } catch (err) {
       logger.error(err)
