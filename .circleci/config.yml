@@ -13,6 +13,7 @@ workflows:
     jobs:
       - build
       - publish:
+          context: publish
           requires:
             - build
           filters:
