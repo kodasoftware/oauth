@@ -185,7 +185,7 @@ commands:
             sleep 20
             echo "Finished sleeping. Now resuming tests"
             npm i
-            npm test
+            npm ci
 
   #
   # Docker (with node) commands

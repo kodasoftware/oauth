@@ -1,0 +1,33 @@
+log:
+  level: error
+
+database:
+  client: sqlite3
+  connectionTimeout: 10000
+  connection:
+    filename: ./test/testdb.sqlite
+  pool:
+    min: 0
+    max: 2
+  migrations:
+    directory: src/database/migs
+    extension: ts
+    tableName: knex_migs
+    loadExtensions: 
+      - .ts
+      - .js
+  seeds:
+    directory: src/database/seeds
+  
+jwt:
+  durationSecs: 20
+  refreshDurationSecs: 20
+  forgottenDurationSecs: 20
+
+cookies:
+  signed: false
+  path: /
+  httpOnly: false
+  secure: true
+  overwrite: true
+  sameSite: false
