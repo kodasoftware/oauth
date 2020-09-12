@@ -17,13 +17,13 @@ export interface TokenServiceResponse {
 export default class TokenService {
   public async createTokenFromAuth(auth: Auth): Promise<TokenServiceResponse> {
     try {
-      const accessTokenExpiry = Math.floor(Date.now() / 1000) + config.jwt.durationSecs
+      const accessTokenExpiry = Math.floor(Date.now() / 1000) + parseInt(config.jwt.durationSecs, 10)
       const accessToken = await jwt.sign({
         email: auth.email,
         exp: accessTokenExpiry * 1000,
         sub: auth.id,
       }, config.jwt.secret)
-      const refreshExpiry = Math.floor(Date.now() / 1000) + config.jwt.refreshDurationSecs
+      const refreshExpiry = Math.floor(Date.now() / 1000) + parseInt(config.jwt.refreshDurationSecs, 10)
       const refreshToken = await jwt.sign({
         email: auth.email,
         exp: refreshExpiry * 1000,
@@ -40,7 +40,7 @@ export default class TokenService {
 
   public async createResetPasswordToken(auth: Auth): Promise<TokenServiceResponse> {
     try {
-      const resetExpiry = Math.floor(Date.now() / 1000) + config.jwt.resetDurationSecs
+      const resetExpiry = Math.floor(Date.now() / 1000) + parseInt(config.jwt.resetDurationSecs, 10)
       const resetToken = await jwt.sign({
         email: auth.email,
         exp: resetExpiry,
