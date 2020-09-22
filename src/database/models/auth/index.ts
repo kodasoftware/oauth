@@ -57,7 +57,7 @@ export class Auth extends Model<AuthRecord, AuthJson> {
   toRecord() {
     return {
       id: this.id,
-      email: this.email.toLowerCase(),
+      email: this.email ? this.email.toLowerCase() : '',
       verified: this.verified,
       password: this.password,
       salt: this.salt,

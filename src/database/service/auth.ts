@@ -36,6 +36,8 @@ export class AuthService {
   public async getAuthFromToken(token: string, type: 'facebook' | 'google'): Promise<AuthServiceResponse> {
     try {
       const user = (type === 'facebook') ? await FB.validateToken(token) : await google.validateToken(token)
+      logger.debug('Got auth for type', type, 'with response', user)
+      if (!user) return { status: 404 }
       const email = user && user.email || null
       const auth = await Auth.find(email)(this.repository)
 
