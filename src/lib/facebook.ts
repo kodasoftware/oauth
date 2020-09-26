@@ -15,7 +15,6 @@ export async function validateToken(user_access_token: string): Promise<any> {
       if (error) {
         throw error
       }
-      console.log(data)
       if (is_valid && type === 'USER' && scopes.includes('email')) {
         const usr = await FB.api(user_id, { access_token: user_access_token, fields: 'email' })
         return usr
