@@ -2,17 +2,20 @@ import FB from 'fb'
 import logger from '../logger'
 import config from '../config'
 
-FB.options({ appId: config.facebook.id, appSecret: config.facebook.secret, version: config.facebook.apiVersion })
+FB.options({ version: config.facebook.apiVersion, appId: config.facebook.id, appSecret: config.facebook.secret })
+FB.setAccessToken(config.facebook.token)
 
 export async function validateToken(user_access_token: string): Promise<any> {
 
   try {
     const { data } = await FB.api('debug_token', { input_token: user_access_token })
+    logger.trace(data, 'Debug token response')
     if (data) {
       const { type, is_valid, scopes, user_id, error } = data
       if (error) {
         throw error
       }
+      console.log(data)
       if (is_valid && type === 'USER' && scopes.includes('email')) {
         const usr = await FB.api(user_id, { access_token: user_access_token, fields: 'email' })
         return usr
