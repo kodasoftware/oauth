@@ -9,23 +9,20 @@ version: 2.1
 # 
 workflows:
   version: 2
-  oauth:
+  test:
     jobs:
       - build
-      - publish:
-          context: publish
-          requires:
-            - build
+  publish:
+    jobs:
+      - approve:
+          type: approval
           filters:
             branches:
               only: master
-      # - hold:
-      #     type: approval
-      #     requires:
-      #       - publish
-      # # - deploy:
-      # #     requires:
-      # #       - hold
+      - publish:
+          context: publish
+          requires:
+            - approve
 
 # 
 # Jobs

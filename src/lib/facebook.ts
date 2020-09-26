@@ -2,8 +2,7 @@ import FB from 'fb'
 import logger from '../logger'
 import config from '../config'
 
-FB.options({ version: config.facebook.apiVersion })
-FB.setAccessToken(config.facebook.token)
+FB.options({ appId: config.facebook.id, appSecret: config.facebook.secret, version: config.facebook.apiVersion })
 
 export async function validateToken(user_access_token: string): Promise<any> {
 

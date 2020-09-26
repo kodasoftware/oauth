@@ -35,7 +35,18 @@ export class AuthService {
 
   public async getAuthFromToken(token: string, type: 'facebook' | 'google'): Promise<AuthServiceResponse> {
     try {
-      const user = (type === 'facebook') ? await FB.validateToken(token) : await google.validateToken(token)
+      let user
+      switch (type) {
+        case 'facebook':
+          logger.debug('Validating token for facebook')
+          user = await FB.validateToken(token)
+          break
+        case 'google':
+          user = await google.validateToken(token)
+          break
+        default:
+          user = false
+      }
       logger.debug('Got auth for type', type, 'with response', user)
       if (!user) return { status: 404 }
       const email = user && user.email || null
