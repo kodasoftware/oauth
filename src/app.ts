@@ -33,9 +33,9 @@ export default class App {
   public readonly koa?: Koa
   private server: Server
   constructor() {
-    this.koa = attachAuthContext(new Koa())
+    this.koa = new Koa().use(mount(config.app.prefix + '/ping', compose([ping.routes(), ping.allowedMethods()])))
+    this.koa = attachAuthContext(this.koa)
     this.koa
-      .use(mount(config.app.prefix + '/ping', compose([ping.routes(), ping.allowedMethods()])))
       .use(mount(config.app.prefix + '/auth', compose([auth.routes(), auth.allowedMethods()])))
       .use(mount(config.app.prefix + '/token', compose([token.routes(), token.allowedMethods()])))
   }
