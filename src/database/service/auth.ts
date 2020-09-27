@@ -44,7 +44,6 @@ export class AuthService {
           user = await google.validateToken(token)
           break
       }
-      console.log(user)
       logger.debug('Got auth for type', type, 'with response', user)
       if (!user) return { status: 404 }
       const email = user && user.email || null
