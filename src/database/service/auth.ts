@@ -36,7 +36,6 @@ export class AuthService {
   public async getAuthFromToken(token: string, type: 'facebook' | 'google'): Promise<AuthServiceResponse> {
     try {
       let user
-      logger.debug({}, type)
       switch (type) {
         case 'facebook':
           user = await FB.validateToken(token)
@@ -45,6 +44,7 @@ export class AuthService {
           user = await google.validateToken(token)
           break
       }
+      console.log(user)
       logger.debug('Got auth for type', type, 'with response', user)
       if (!user) return { status: 404 }
       const email = user && user.email || null
@@ -123,6 +123,10 @@ export class AuthService {
         }
         const auth = await Auth.create(email, null, null, false)(this.repository)
         if (!auth) return { status: 409 }
+        if (user.email_verified) {
+          auth.verified = true
+          await auth.save()
+        }
         return { status: 201, auth }
       }
       return { status: 400, error: 'Invalid token type' }

@@ -12,9 +12,7 @@ export async function validateToken(user_access_token: string): Promise<any> {
     logger.trace(data, 'Debug token response')
     if (data) {
       const { type, is_valid, scopes, user_id, error } = data
-      if (error) {
-        throw error
-      }
+      if (error) throw error
       if (is_valid && type === 'USER' && scopes.includes('email')) {
         const usr = await FB.api(user_id, { access_token: user_access_token, fields: 'email' })
         return usr

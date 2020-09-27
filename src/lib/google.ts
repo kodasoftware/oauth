@@ -12,7 +12,7 @@ export async function validateToken(token: string): Promise<any> {
       idToken: token,
       audience: config.google.clientId,
     })
-    return usr
+    return usr.getPayload()
   } catch (err) {
     logger.error(err)
   }
