@@ -34,6 +34,19 @@ describe('refreshTokenMiddleware', () => {
     response.headers.should.have.properties(['set-cookie'])
     response.body.should.have.properties(['token', 'expiresAt'])
   })
+  it('should set a refresh token from a valid access token', async () => {
+    const jar = requestPromise.jar()
+    const { token: accessToken } = await requestPromise(
+      URL + '/token', { method: 'POST', body: { email, password }, json: true, jar })
+    const response = await requestPromise(URL, {
+      method: 'get',
+      jar,
+      resolveWithFullResponse: true,
+      json: true,
+      headers: { Authorization: 'Bearer ' + accessToken } })
+    response.headers.should.have.properties(['set-cookie'])
+    response.body.should.have.properties(['token', 'expiresAt'])
+  })
   it('should return 401 if no cookie is set', async () => {
     const response = await requestPromise(URL, { method: 'get', resolveWithFullResponse: true, json: true })
     .catch((err) => { err.statusCode.should.be.eql(401) })

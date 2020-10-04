@@ -55,7 +55,7 @@ export default class TokenService {
     }
   }
 
-  public async verifyRefreshToken(refreshToken: string): Promise<any> {
+  public async verifyToken(refreshToken: string): Promise<any> {
     try {
       const token = await jwt.verify(refreshToken, config.jwt.secret) as any
       const now = Date.now() / 1000
