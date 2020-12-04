@@ -63,6 +63,7 @@ export class AuthService {
     try {
       const auth = await Auth.find(email)(this.repository)
       if (!auth) return { status: 404 }
+      if (!auth.password) return { status: 401 }
       const match = await this.compare(password, auth.password)
       if (auth.deleted || !match) return { status: 401 }
       if (auth.password !== null) {
