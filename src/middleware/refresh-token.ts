@@ -2,7 +2,7 @@ import { AuthContext } from './context'
 import config from '../config'
 
 export default async function refreshTokenMiddleware(ctx: AuthContext) {
-  const [type, accessToken] = 'Authorization' in ctx.headers ? ctx.headers.Authorization.split(' ') : []
+  const [type, accessToken] = 'authorization' in ctx.headers ? ctx.headers.authorization.split(' ') : []
   const refreshToken = ctx.cookies.get('refresh_token', config.cookie.opts)
   if (!refreshToken && !accessToken) {
     ctx.status = 401
