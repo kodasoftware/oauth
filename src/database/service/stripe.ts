@@ -1,7 +1,7 @@
-import { Auth } from "../models/auth"
+import { Auth } from '../models/auth'
 import { Stripe as StripeI } from 'stripe'
 
-const STRIPE = require("stripe")
+const STRIPE = require('stripe')
 
 export interface Customer {
   id: string,
@@ -14,9 +14,7 @@ export interface StripeServiceResponse {
 
 export class StripeService {
   protected readonly stripe: StripeI
-  constructor(
-    apiKey: string, 
-  ) {
+  constructor(apiKey: string) {
     this.stripe = STRIPE(apiKey)
   }
   public async createCustomerForAuth(auth: Auth): Promise<StripeServiceResponse> {
