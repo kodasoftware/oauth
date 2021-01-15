@@ -19,6 +19,14 @@ facebook:
   secret: FACEBOOK_APP_SECRET
   token: FACEBOOK_APP_TOKEN
 
+stripe:
+  apiKey: STRIPE_API_KEY
+
+untappd:
+  host: UNTAPPED_HOST
+  clientId: UNTAPPD_CLIENT_ID
+  clientSecret: UNTAPPD_CLIENT_SECRET
+
 database:
   client: DB_CLIENT
   connectionTimeout: DB_CONNECTION_TIMEOUT

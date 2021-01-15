@@ -1,8 +1,8 @@
 import compose from 'koa-compose'
 import { middleware } from '@kodasoftware/koa-bundle'
-import { AuthContext } from './context'
+import { AuthContext, StripeContext } from './context'
 
-export default compose<AuthContext>([
+export default compose<AuthContext & StripeContext>([
   middleware.requestValidationForSchema({
     oneOf: [{
       type: 'object',
@@ -20,7 +20,7 @@ export default compose<AuthContext>([
     }, {
       type: 'object',
       properties: {
-        type: { type: 'string', enum: ['facebook', 'google'] },
+        type: { type: 'string', enum: ['facebook', 'google', 'untappd'] },
         token: { type: 'string', minLength: 1 }
       },
       additionalProperties: true,
@@ -41,8 +41,18 @@ export default compose<AuthContext>([
       return
     }
 
-    const { status, error } = response
-    ctx.status = status
-    if (error) ctx.body = error
+    const { status, error, auth } = response
+    if (error) {
+      ctx.body = error
+      ctx.status = status
+    } else if (status === 201 && auth) {
+      const stripeRes = await ctx.services.stripe.createCustomerForAuth(auth)
+      if (stripeRes.error) {
+        ctx.status = stripeRes.status
+        ctx.body = stripeRes.error
+        return
+      }
+      ctx.status = stripeRes.status
+    } else ctx.status = status
   }
 ])

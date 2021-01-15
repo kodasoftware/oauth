@@ -19,13 +19,13 @@ export default class TokenService {
     try {
       const accessTokenExpiry = Math.floor(Date.now() / 1000) + parseInt(config.jwt.durationSecs, 10)
       const accessToken = await jwt.sign({
-        email: auth.email,
+        ...auth.toJson(),
         exp: accessTokenExpiry * 1000,
         sub: auth.id,
       }, config.jwt.secret)
       const refreshExpiry = Math.floor(Date.now() / 1000) + parseInt(config.jwt.refreshDurationSecs, 10)
       const refreshToken = await jwt.sign({
-        email: auth.email,
+        ...auth.toJson(),
         exp: refreshExpiry * 1000,
         sub: auth.id,
       }, config.jwt.secret)

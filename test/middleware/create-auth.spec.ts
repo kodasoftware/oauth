@@ -1,6 +1,7 @@
 import * as should from 'should'
 import createAuthMiddleware from '../../src/middleware/create-auth'
 import { attachAuthContext } from '../../src/app'
+import nock from 'nock'
 import Koa from 'koa'
 import config from '../../src/config'
 import requestPromise from 'request-promise'
@@ -15,8 +16,17 @@ describe('createAuthMiddleware', () => {
   const koa = attachAuthContext(new Koa())
   koa.use(createAuthMiddleware)
   let server
-  before(async () => server = await koa.listen(config.app.port))
-  after(() => server.close())
+  before(async () => {
+    server = await koa.listen(config.app.port)
+    nock(/stripe/i)
+      .post(/v1\/customers/i).reply(201, (uri, body, callback) => {
+        callback(null, { id: 'cus_' + CHANCE.string() })
+      })
+  })
+  after(() => {
+    server.close()
+    nock.cleanAll()
+  })
 
   it('should return 201 for valid email password', async () => {
     const email = CHANCE.email()

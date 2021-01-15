@@ -50,6 +50,7 @@ export class Auth extends Model<AuthRecord, AuthJson> {
     public deleted: boolean = false,
     public id: string = v4(),
     public resetToken: string = null,
+    public stripeCustomerId: string = null,
   ) {
     super(Auth.TABLE, Auth.CONFLICTS, repository)
   }
@@ -63,10 +64,16 @@ export class Auth extends Model<AuthRecord, AuthJson> {
       salt: this.salt,
       deleted: this.deleted,
       reset_token: this.resetToken,
+      stripe_customer_id: this.stripeCustomerId,
     }
   }
 
   toJson() {
-    return {}
+    return {
+      email: this.email,
+      stripe_customer_id: this.stripeCustomerId,
+      verified: this.verified,
+      deleted: this.deleted,
+    }
   }
 }

@@ -7,6 +7,7 @@ import Chance from 'chance'
 import { clearDataset } from '../utils'
 import { Auth } from '../../src/database'
 import requestPromise from 'request-promise'
+import nock from 'nock'
 
 const APP = attachAuthContext(new Koa()).use(getTokenMiddleware)
 const KNEX = APP.context.database
@@ -19,16 +20,26 @@ describe('getTokenMiddleware', () => {
   let email
   let password
   let token
-  before(() => server = APP.listen(config.app.port))
+  before(() => {
+    server = APP.listen(config.app.port)
+    nock(/stripe/i)
+      .post(/v1\/customers/i).reply(201, (uri, body, callback) => {
+        callback(null, { id: 'cus_' + CHANCE.string() })
+      })
+  })
   beforeEach(async () => {
     email = CHANCE.email()
     password = 'aVal1dP@ss'
     await clearDataset([Auth.TABLE])
     const response = await APP.context.services.auth.createFromEmailPassword(email, password)
     token = await APP.context.services.token.createTokenFromAuth(response.auth)
-    auth = response.auth
+    const stripeRes = await APP.context.services.stripe.createCustomerForAuth(response.auth)
+    auth = stripeRes.auth
   })
-  after(() => server.close())
+  after(() => {
+    server.close()
+    nock.cleanAll()
+  })
   it('should return an access token and refresh token cookie for email password', async () => {
     const response = await requestPromise(URL,
       { method: 'post', body: { email, password }, json: true, resolveWithFullResponse: true })

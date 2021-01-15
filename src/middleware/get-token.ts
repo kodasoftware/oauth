@@ -1,9 +1,9 @@
 import compose from 'koa-compose'
-import { AuthContext } from './context'
+import { AuthContext, StripeContext } from './context'
 import { middleware } from '@kodasoftware/koa-bundle'
 import config from '../config'
 
-export default compose<AuthContext>([
+export default compose<AuthContext & StripeContext>([
   middleware.requestValidationForSchema({
     oneOf: [{
       type: 'object',
@@ -20,7 +20,7 @@ export default compose<AuthContext>([
       type: 'object',
       properties: {
         token: { type: 'string', minLength: 1 },
-        type: { type: 'string', enum: ['facebook', 'google'] },
+        type: { type: 'string', enum: ['facebook', 'google', 'untappd'] },
       },
       required: ['token', 'type']
     }]

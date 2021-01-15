@@ -1,10 +1,11 @@
 import bcrypt from 'bcrypt'
+import Knex from 'knex'
 import { Auth } from '../models/auth'
 import logger from '../../logger'
 import Repository from '../repository'
 import * as FB from '../../lib/facebook'
 import * as google from '../../lib/google'
-import Knex from 'knex'
+import * as untappd from '../../lib/untappd'
 
 export interface AuthServiceResponse {
   status: number,
@@ -33,7 +34,7 @@ export class AuthService {
     }
   }
 
-  public async getAuthFromToken(token: string, type: 'facebook' | 'google'): Promise<AuthServiceResponse> {
+  public async getAuthFromToken(token: string, type: 'facebook' | 'google' | 'untappd'): Promise<AuthServiceResponse> {
     try {
       let user
       switch (type) {
@@ -42,6 +43,9 @@ export class AuthService {
           break
         case 'google':
           user = await google.validateToken(token)
+          break
+        case 'untappd':
+          user = await untappd.validateToken(token)
           break
       }
       logger.debug('Got auth for type', type, 'with response', user)
@@ -97,7 +101,7 @@ export class AuthService {
     }
   }
 
-  public async createFromToken(token: string, type: 'facebook' | 'google'): Promise<AuthServiceResponse> {
+  public async createFromToken(token: string, type: 'facebook' | 'google' | 'untappd'): Promise<AuthServiceResponse> {
     try {
       let user
       switch (type) {
@@ -106,6 +110,9 @@ export class AuthService {
           break
         case 'google':
           user = await google.validateToken(token)
+          break
+        case 'untappd':
+          user = await untappd.validateToken(token)
           break
       }
       logger.debug('Got auth for type', type, 'with response', user)

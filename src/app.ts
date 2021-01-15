@@ -10,7 +10,7 @@ import auth from './routes/auth'
 import token from './routes/token'
 import * as knexfile from '../knexfile'
 import Knex from 'knex'
-import { AuthService } from './database/service'
+import { AuthService, StripeService } from './database/service'
 import TokenService from './lib/token'
 
 export function attachAuthContext(koa: Koa): Koa {
@@ -19,6 +19,7 @@ export function attachAuthContext(koa: Koa): Koa {
   koa.context.services = {
     auth: new AuthService(kn),
     token: new TokenService(),
+    stripe: new StripeService(config.stripe.apiKey)
   }
   koa.keys = config.cookie.keys
   koa.use(middleware.composedMiddlewares(config.app.name, config.log.level, null, {

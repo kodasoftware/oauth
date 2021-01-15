@@ -12,6 +12,7 @@ export function up(knex: Knex): Promise<any> {
           table.string('password').nullable()
           table.string('salt').nullable()
           table.string('reset_token').defaultTo(null)
+          table.string('stripe_customer_id').nullable().defaultTo(null)
           table.boolean('deleted').notNullable().defaultTo(false)
           table.dateTime('created_at', { useTz: true }).notNullable()
           table.dateTime('updated_at', { useTz: true }).notNullable()
