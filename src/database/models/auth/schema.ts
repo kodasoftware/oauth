@@ -9,4 +9,9 @@ export interface AuthRecord {
   deleted: boolean,
 }
 
-export interface AuthJson {} // tslint:disable-line
+export interface AuthJson {
+  email: string,
+  stripe_customer_id: string,
+  verified: boolean,
+  deleted: boolean,
+}

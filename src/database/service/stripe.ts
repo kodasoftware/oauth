@@ -1,5 +1,6 @@
 import { Auth } from '../models/auth'
 import { Stripe as StripeI } from 'stripe'
+import logger from '../../logger'
 
 const STRIPE = require('stripe')
 
@@ -21,12 +22,27 @@ export class StripeService {
     try {
       const customer = await this.stripe.customers.create({
         email: auth.email,
-        metadata: { auth_id: auth.id }
+        metadata: { auth_id: auth.id, deleted: auth.deleted ? 1 : 0 }
       })
       auth.stripeCustomerId = customer.id
       await auth.save()
       return { status: 201, auth }
     } catch (err) {
+      return { status: err.status || 500, error: err, auth }
+    }
+  }
+  public async updateCustomerFromAuth(auth: Auth): Promise<StripeServiceResponse> {
+    try {
+      if (!auth.stripeCustomerId) return { status: 400, error: 'No Stripe customer exists for user' }
+      const customer = await this.stripe.customers.update(auth.stripeCustomerId, {
+        email: auth.email,
+        metadata: { deleted: auth.deleted ? 1 : 0 },
+      })
+      auth.stripeCustomerId = customer.id
+      await auth.save()
+      return { status: 200, auth }
+    } catch (err) {
+      logger.error(err)
       return { status: err.status || 500, error: err, auth }
     }
   }

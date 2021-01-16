@@ -1,9 +1,9 @@
 import compose from 'koa-compose'
-import { AuthContext, StripeContext } from './context'
+import { ServicesContext } from './context'
 import { middleware } from '@kodasoftware/koa-bundle'
 import config from '../config'
 
-export default compose<AuthContext & StripeContext>([
+export default compose<ServicesContext>([
   middleware.requestValidationForSchema({
     oneOf: [{
       type: 'object',

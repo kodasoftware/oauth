@@ -1,9 +1,10 @@
 import compose from 'koa-compose'
-import { AuthContextWithAuthorization } from './context'
+import { ServicesContextWithAuthorization } from './context'
 import { middleware } from '@kodasoftware/koa-bundle'
 import authMiddleware from '../lib/middleware'
+import logger from '../logger'
 
-export default compose<AuthContextWithAuthorization>([
+export default compose<ServicesContextWithAuthorization>([
   authMiddleware,
   middleware.requestValidationForSchema({
     anyOf: [{
@@ -41,5 +42,12 @@ export default compose<AuthContextWithAuthorization>([
     }
     await auth.save()
     ctx.status = 200
+    if (newEmail) {
+      if (!auth.stripeCustomerId) await ctx.services.stripe.createCustomerForAuth(auth)
+      const { status: s, error: e } = await ctx.services.stripe.updateCustomerFromAuth(auth)
+      logger.trace({ s, e }, 'update')
+      if (s !== 200) ctx.status = s
+      if (e) ctx.body = e
+    }
   }
 ])

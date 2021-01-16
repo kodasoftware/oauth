@@ -1,10 +1,10 @@
 import compose from 'koa-compose'
-import { AuthContext } from './context'
+import { ServicesContext } from './context'
 import { middleware } from '@kodasoftware/koa-bundle'
 import * as google from '../lib/google'
 import config from '../config'
 
-export default compose<AuthContext>([
+export default compose<ServicesContext>([
   middleware.requestValidationForSchema({
     type: 'object',
     properties: { email: { type: 'string', format: 'email' } },

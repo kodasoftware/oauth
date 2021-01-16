@@ -1,8 +1,8 @@
 import compose from 'koa-compose'
 import { middleware } from '@kodasoftware/koa-bundle'
-import { AuthContext, StripeContext } from './context'
+import { ServicesContext } from './context'
 
-export default compose<AuthContext & StripeContext>([
+export default compose<ServicesContext>([
   middleware.requestValidationForSchema({
     oneOf: [{
       type: 'object',
@@ -48,6 +48,7 @@ export default compose<AuthContext & StripeContext>([
     } else if (status === 201 && auth) {
       const stripeRes = await ctx.services.stripe.createCustomerForAuth(auth)
       if (stripeRes.error) {
+        await ctx.services.auth.deleteFromIdEmail(auth.id, auth.email)
         ctx.status = stripeRes.status
         ctx.body = stripeRes.error
         return
