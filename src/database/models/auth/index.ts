@@ -38,7 +38,8 @@ export class Auth extends Model<AuthRecord, AuthJson> {
         result.salt,
         Boolean(result.deleted),
         result.id,
-        result.reset_token)
+        result.reset_token,
+        result.stripe_customer_id)
     }
   }
   constructor(
