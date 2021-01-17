@@ -41,9 +41,9 @@ database:
     # filename: ./test/testdb.sqlite
     host: localhost
     port: 5432
-    user: brewers
+    user: oauth
     password: root
-    database: brewers
+    database: oauth
   pool:
     min: 1
     max: 2

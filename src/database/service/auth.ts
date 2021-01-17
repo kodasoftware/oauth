@@ -185,6 +185,8 @@ export class AuthService {
   }
 
   protected compare(password: string, encrypted: string): Promise<boolean> {
+    if (!password) return Promise.resolve(false)
+    if (!encrypted) return Promise.resolve(true)
     return bcrypt.compare(password, encrypted)
   }
 
