@@ -39,7 +39,9 @@ export class Auth extends Model<AuthRecord, AuthJson> {
         Boolean(result.deleted),
         result.id,
         result.reset_token,
-        result.stripe_customer_id)
+        result.stripe_customer_id,
+        result.name,
+      )
     }
   }
   constructor(
@@ -52,6 +54,7 @@ export class Auth extends Model<AuthRecord, AuthJson> {
     public id: string = v4(),
     public resetToken: string = null,
     public stripeCustomerId: string = null,
+    public name: string = null,
   ) {
     super(Auth.TABLE, Auth.CONFLICTS, repository)
   }
@@ -59,6 +62,7 @@ export class Auth extends Model<AuthRecord, AuthJson> {
   toRecord() {
     return {
       id: this.id,
+      name: this.name,
       email: this.email ? this.email.toLowerCase() : '',
       verified: this.verified,
       password: this.password,
@@ -71,6 +75,7 @@ export class Auth extends Model<AuthRecord, AuthJson> {
 
   toJson() {
     return {
+      name: this.name,
       email: this.email,
       stripe_customer_id: this.stripeCustomerId,
       verified: this.verified,

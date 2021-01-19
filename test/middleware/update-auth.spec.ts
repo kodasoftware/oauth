@@ -30,6 +30,18 @@ describe('updateAuthMiddleware', () => {
       .post(/v1\/customers/i).reply(201, (uri, body, callback) => {
         callback(null, { id: 'cus_' + CHANCE.string() })
       })
+    
+    nock(/facebook/i)
+      .post(/.*/i).reply(200, (uri, body, cb) => {
+        console.log(uri)
+        cb(null, {
+          id: CHANCE.guid(),
+          email: CHANCE.email(),
+          first_name: CHANCE.name(),
+          last_name: CHANCE.last(),
+          name_format: '{first} {last}'
+        })
+      })
   })
   beforeEach(async () => {
     email = CHANCE.email()
@@ -50,11 +62,11 @@ describe('updateAuthMiddleware', () => {
       headers: { Authorization: 'Bearer ' + token.accessToken }, json: true,
       resolveWithFullResponse: true
     })
-    // response.statusCode.should.be.eql(200)
-    // const record = await APP.context.database.from(Auth.TABLE).where({ email: newEmail }).first()
-    // should.exist(record)
-    // record.id.should.be.eql(auth.id)
-    // record.email.should.not.eql(auth.email)
+    response.statusCode.should.be.eql(200)
+    const record = await APP.context.database.from(Auth.TABLE).where({ email: newEmail }).first()
+    should.exist(record)
+    record.id.should.be.eql(auth.id)
+    record.email.should.not.eql(auth.email)
   })
   it('should update password for valid token and payload', async () => {
     const newPassword = 'mYn3WP@ss'
@@ -98,7 +110,7 @@ describe('updateAuthMiddleware', () => {
   })
   it('should return 400 for invalid existing', async () => {
     const response = await requestPromise(URL, {
-      method: 'post', body: { existing: CHANCE.integer(), password: 'mYn3WP@ss' },
+      method: 'post', body: { existing: CHANCE.natural(), password: 'mYn3WP@ss' },
       headers: { Authorization: 'Bearer ' + token.accessToken }, json: true,
       resolveWithFullResponse: true })
     .catch(err => { err.statusCode.should.be.eql(400) })
@@ -106,7 +118,7 @@ describe('updateAuthMiddleware', () => {
   })
   it('should return 400 for invalid new password', async () => {
     const response = await requestPromise(URL, {
-      method: 'post', body: { existing: 'mYn3WP@ss', password: CHANCE.integer() },
+      method: 'post', body: { existing: 'mYn3WP@ss', password: CHANCE.floating() },
       headers: { Authorization: 'Bearer ' + token.accessToken }, json: true,
       resolveWithFullResponse: true })
     .catch(err => { err.statusCode.should.be.eql(400) })

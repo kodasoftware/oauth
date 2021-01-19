@@ -104,9 +104,22 @@ export class AuthService {
   public async createFromToken(token: string, type: 'facebook' | 'google' | 'untappd'): Promise<AuthServiceResponse> {
     try {
       let user
+      let email
+      let name
+      let password
       switch (type) {
         case 'facebook':
           user = await FB.validateToken(token)
+          if (user) {
+            let [first, last, lastOverride] = (user.name_format as string).trim().substring(1).substring(0, user.name_format.length - 2).split('} {')
+            const names = []
+            if (first) names.push(user[first + '_name'])
+            if (last) names.push(user[last + '_name'])
+            if (lastOverride) names.push(user[lastOverride + '_name'])
+            name = names.join(' ')
+            password = user.id
+            logger.debug('setting user information', { name, id: user.id })
+          }
           break
         case 'google':
           user = await google.validateToken(token)
@@ -117,7 +130,7 @@ export class AuthService {
       }
       logger.debug('Got auth for type', type, 'with response', user)
       if (!user) return { status: 401 }
-      const email = user && user.email || null
+      email = user && user.email || null
       if (email) {
         const { auth: existing } = await this.verifyEmailExists(email)
         if (existing && !existing.deleted) {
@@ -128,12 +141,14 @@ export class AuthService {
           await existing.save()
           return { status: 201, auth: existing }
         }
-        const auth = await Auth.create(email, null, null, false)(this.repository)
+        const { encrypted, salt } = await this.encrypt(password)
+        const auth = await Auth.create(email, encrypted, salt, false)(this.repository)
         if (!auth) return { status: 409 }
         if (user.email_verified) {
           auth.verified = true
-          await auth.save()
         }
+        auth.name = name
+        await auth.save()
         return { status: 201, auth }
       }
       return { status: 400, error: 'Invalid token type' }
@@ -161,8 +176,8 @@ export class AuthService {
 
   public async updateAuthPassword(auth: Auth, existing: string, password: string): Promise<AuthServiceResponse> {
     try {
+      const { salt, encrypted } = await this.encrypt(password)
       if (await this.compare(existing, auth.password)) {
-        const { salt, encrypted } = await this.encrypt(password)
         auth.password = encrypted
         auth.salt = salt
         return { status: 200, auth }
@@ -170,7 +185,7 @@ export class AuthService {
       return { status: 401 }
     } catch (err) {
       logger.error(err)
-      return { status: err.statusCode || 500, error: err.error || err.message || err } as any
+      return { status: err.statusCode || 400, error: err.error || err.message || err } as any
     }
   }
 

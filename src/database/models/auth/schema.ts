@@ -1,5 +1,6 @@
 export interface AuthRecord {
   id: string,
+  name: string,
   email: string,
   verified: boolean,
   stripe_customer_id: string,
@@ -10,6 +11,7 @@ export interface AuthRecord {
 }
 
 export interface AuthJson {
+  name: string,
   email: string,
   stripe_customer_id: string,
   verified: boolean,

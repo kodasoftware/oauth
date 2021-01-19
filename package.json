@@ -1,6 +1,6 @@
 {
   "name": "oauth",
-  "version": "0.3.3",
+  "version": "0.4.0",
   "description": "",
   "main": "index.js",
   "author": "",
@@ -9,7 +9,7 @@
     "start": "nodemon",
     "start-pubsub": "gcloud beta emulators pubsub start &",
     "stop-pubsub": "fg",
-    "pre-test": "npx knex migrate:latest --env test",
+    "pre-test": "NODE_ENV=test knex migrate:latest",
     "test-runner": "NODE_ENV=test ts-mocha -p test/tsconfig.json 'test/**/*.spec.ts' --exit --timeout 3000",
     "ci": "NODE_ENV=ci npm run pre-test && npm run test-runner",
     "test": "NODE_ENV=test npm run pre-test && npm run test-runner",
@@ -40,6 +40,7 @@
   },
   "devDependencies": {
     "@types/bcrypt": "^3.0.0",
+    "@types/chance": "^1.1.1",
     "@types/jsonwebtoken": "^8.3.8",
     "@types/mocha": "^7.0.2",
     "@types/node": "^13.7.7",

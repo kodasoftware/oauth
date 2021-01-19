@@ -23,6 +23,7 @@ describe('Auth Service', () => {
       auth.verified.should.be.eql(false)
       auth.deleted.should.be.eql(false)
       should.not.exist(auth.resetToken)
+      should.not.exist(auth.name)
 
       const record = await KNEX.from(Auth.TABLE).where({ email }).first()
       should.exist(record)
@@ -46,6 +47,7 @@ describe('Auth Service', () => {
       should.not.exist(auth.salt)
       Boolean(auth.deleted).should.be.eql(false)
       should.not.exist(auth.resetToken)
+      console.log(auth.name)
 
       should.exist(await KNEX.from(Auth.TABLE).where({ email: facebook.email }).first())
     })

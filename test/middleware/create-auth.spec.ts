@@ -28,11 +28,12 @@ describe('createAuthMiddleware', () => {
     nock.cleanAll()
   })
 
-  it('should return 201 for valid email password', async () => {
+  it('should return 201 for valid name, email password', async () => {
+    const name = CHANCE.name({ full: true })
     const email = CHANCE.email()
     const password = 'BlueJ4ys@'
     const response = await requestPromise(url, {
-      method: 'post', body: { email, password }, json: true, resolveWithFullResponse: true })
+      method: 'post', body: { name, email, password }, json: true, resolveWithFullResponse: true })
     response.statusCode.should.be.eql(201)
   })
   it.skip('should return 201 for valid facebook token', async ()  => {
@@ -45,23 +46,34 @@ describe('createAuthMiddleware', () => {
       method: 'post', body: { token: google.token, type: 'google' }, json: true, resolveWithFullResponse: true })
     response.statusCode.should.be.eql(201)
   })
-  it('should return 400 for invalid email', async () => {
+  it('should return 400 for invalid name', async () => {
+    const name = CHANCE.floating()
     const email = 'this.isiansoalkmas'
     const password = 'icecr3Am@'
     const response = await requestPromise(url, {
-      method: 'post', body: { email, password }, json: true, resolveWithFullResponse: true })
+      method: 'post', body: { name, email, password }, json: true, resolveWithFullResponse: true })
+    .catch((err) => { err.statusCode.should.be.eql(400) })
+    should.not.exist(response)
+  })
+  it('should return 400 for invalid email', async () => {
+    const name = CHANCE.name({ full: true })
+    const email = 'this.isiansoalkmas'
+    const password = 'icecr3Am@'
+    const response = await requestPromise(url, {
+      method: 'post', body: { name, email, password }, json: true, resolveWithFullResponse: true })
     .catch((err) => { err.statusCode.should.be.eql(400) })
     should.not.exist(response)
   })
   it('should return 400 for invalid password', async () => {
+    const name = CHANCE.name({ full: true })
     const email = CHANCE.email()
     const password = 'invalidpassword'
     const response = await requestPromise(url, {
-      method: 'post', body: { email, password }, json: true, resolveWithFullResponse: true })
+      method: 'post', body: { name, email, password }, json: true, resolveWithFullResponse: true })
     .catch((err) => { err.statusCode.should.be.eql(400) })
     should.not.exist(response)
   })
-  it('should return 400 for invalid facebook token', async () => {
+  it('should return 401 for invalid facebook token', async () => {
     const token = CHANCE.string()
     const response = await requestPromise(url, {
       method: 'post', body: { token, type: 'facebook' }, json: true, resolveWithFullResponse: true })

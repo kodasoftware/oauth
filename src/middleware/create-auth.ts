@@ -7,6 +7,7 @@ export default compose<ServicesContext>([
     oneOf: [{
       type: 'object',
       properties: {
+        name: { type: 'string', minLength: 1 },
         email: { type: 'string', format: 'email' },
         password: {
           type: 'string',
@@ -16,7 +17,7 @@ export default compose<ServicesContext>([
         },
         additionalProperties: true,
       },
-      required: ['email', 'password'],
+      required: ['name', 'email', 'password'],
     }, {
       type: 'object',
       properties: {

@@ -9,8 +9,10 @@ export default compose<ServicesContextWithAuthorization>([
   middleware.requestValidationForSchema({
     anyOf: [{
       type: 'object',
-      properties: { email: { type: 'string', format: 'email' } },
-      required: ['email'],
+      properties: { 
+        email: { type: 'string', format: 'email' },
+        name: { type: 'string', minLength: 1 }
+      },
     }, {
       type: 'object',
       properties: {
@@ -19,10 +21,10 @@ export default compose<ServicesContextWithAuthorization>([
       },
       required: ['password', 'existing'],
     }]
-  }),
+  }, { removeAdditional: true, useDefaults: true, coerceTypes: true }),
   async (ctx) => {
     const { sub, email } = ctx.state.auth
-    const { email: newEmail, password, existing } = ctx.request.body
+    const { email: newEmail, name: newName, password, existing } = ctx.request.body
     const authResponse = await ctx.services.auth.getAuthFromIdEmail(sub, email)
     const { status } = authResponse
     ctx.status = status
@@ -31,6 +33,7 @@ export default compose<ServicesContextWithAuthorization>([
 
     let { auth } = authResponse
     if (newEmail) auth.email = newEmail
+    if (newName) auth.name = newName
     if (password && existing) {
       const updateResponse = await ctx.services.auth.updateAuthPassword(auth, existing, password)
       if (updateResponse.status !== 200) {
@@ -42,7 +45,7 @@ export default compose<ServicesContextWithAuthorization>([
     }
     await auth.save()
     ctx.status = 200
-    if (newEmail) {
+    if (newEmail || newName) {
       if (!auth.stripeCustomerId) await ctx.services.stripe.createCustomerForAuth(auth)
       const { status: s, error: e } = await ctx.services.stripe.updateCustomerFromAuth(auth)
       logger.trace({ s, e }, 'update')

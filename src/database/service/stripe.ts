@@ -22,6 +22,7 @@ export class StripeService {
     try {
       const customer = await this.stripe.customers.create({
         email: auth.email,
+        name: auth.name,
         metadata: { auth_id: auth.id, deleted: auth.deleted ? 1 : 0 }
       })
       auth.stripeCustomerId = customer.id
@@ -36,6 +37,7 @@ export class StripeService {
       if (!auth.stripeCustomerId) return { status: 400, error: 'No Stripe customer exists for user' }
       const customer = await this.stripe.customers.update(auth.stripeCustomerId, {
         email: auth.email,
+        name: auth.name,
         metadata: { deleted: auth.deleted ? 1 : 0 },
       })
       auth.stripeCustomerId = customer.id

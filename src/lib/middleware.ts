@@ -3,7 +3,6 @@ import config from '../config'
 import { Context } from 'koa'
 import { ServicesContext } from '../middleware/context'
 import { AuthJson } from '../database'
-import { auth } from 'google-auth-library'
 
 export default async (ctx: Context & ServicesContext, next) => {
   if (!ctx.header.authorization) {
