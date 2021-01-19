@@ -9,7 +9,7 @@ export default compose<ServicesContextWithAuthorization>([
   middleware.requestValidationForSchema({
     anyOf: [{
       type: 'object',
-      properties: { 
+      properties: {
         email: { type: 'string', format: 'email' },
         name: { type: 'string', minLength: 1 }
       },

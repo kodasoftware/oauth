@@ -111,7 +111,7 @@ export class AuthService {
         case 'facebook':
           user = await FB.validateToken(token)
           if (user) {
-            let [first, last, lastOverride] = (user.name_format as string).trim().substring(1).substring(0, user.name_format.length - 2).split('} {')
+            const [first, last, lastOverride] = (user.name_format as string).trim().substring(1).substring(0, user.name_format.length - 2).split('} {')
             const names = []
             if (first) names.push(user[first + '_name'])
             if (last) names.push(user[last + '_name'])

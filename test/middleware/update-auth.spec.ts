@@ -30,10 +30,9 @@ describe('updateAuthMiddleware', () => {
       .post(/v1\/customers/i).reply(201, (uri, body, callback) => {
         callback(null, { id: 'cus_' + CHANCE.string() })
       })
-    
+
     nock(/facebook/i)
       .post(/.*/i).reply(200, (uri, body, cb) => {
-        console.log(uri)
         cb(null, {
           id: CHANCE.guid(),
           email: CHANCE.email(),
