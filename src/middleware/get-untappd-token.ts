@@ -1,10 +1,8 @@
 import { Context } from 'koa'
 import compose from 'koa-compose'
 import jwt from 'jsonwebtoken'
-import request from 'request-promise'
 import { ServicesContextWithAuthorization, ServicesContext } from './context'
 import { AuthJson } from '../database'
-import authMiddleware from '../lib/middleware'
 import config from '../config'
 
 export default compose([
@@ -48,6 +46,7 @@ export default compose([
       return
     }
     ctx.redirect('https://untappd.com/oauth/authenticate/?client_id=' + config.untappd.clientId +
-      '&response_type=code&redirect_url=http://localhost:9000/untappd/confirm')
+      '&response_type=code&' +
+      'redirect_url=' + config.app.host + config.app.prefix + '/untappd/confirm')
   },
 ])

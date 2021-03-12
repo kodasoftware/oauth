@@ -1,5 +1,6 @@
 app:
   name: oAuth API
+  host: http://localhost:9000
   port: 9000
   prefix: ''
   cors:

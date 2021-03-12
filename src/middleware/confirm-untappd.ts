@@ -57,7 +57,7 @@ export default compose([
         '&client_secret=' + config.untappd.clientSecret +
         '&response_type=code&' +
         '&code=' + code +
-        '&redirect_url=http://localhost:9000/untappd/confirm',
+        '&redirect_url=' + config.app.host + config.app.prefix +'/untappd/confirm',
         { json: true },
       )
         .then(({ response: { access_token } }) => ctx.services.auth.addUntappdTokenToAuth(auth, access_token))
