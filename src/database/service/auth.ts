@@ -199,6 +199,17 @@ export class AuthService {
     }
   }
 
+  public async addUntappdTokenToAuth(auth: Auth, access_token: string): Promise<AuthServiceResponse> {
+    try {
+      auth.untappd_token = access_token
+      await auth.save()
+      return { status: 200, auth }
+    } catch (err) {
+      logger.error(err)
+      return { status: err.statusCode || 500, error: err.error || err.message || err } as any
+    }
+  }
+
   protected compare(password: string, encrypted: string): Promise<boolean> {
     if (!password) return Promise.resolve(false)
     if (!encrypted) return Promise.resolve(true)

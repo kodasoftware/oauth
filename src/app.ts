@@ -8,6 +8,7 @@ import logger from './logger'
 import ping from './routes/ping'
 import auth from './routes/auth'
 import token from './routes/token'
+import untappd from './routes/untappd'
 import * as knexfile from '../knexfile'
 import Knex from 'knex'
 import { AuthService, StripeService } from './database/service'
@@ -39,6 +40,7 @@ export default class App {
     this.koa
       .use(mount(config.app.prefix + '/auth', compose([auth.routes(), auth.allowedMethods()])))
       .use(mount(config.app.prefix + '/token', compose([token.routes(), token.allowedMethods()])))
+      .use(mount(config.app.prefix + '/untappd', compose([untappd.routes(), untappd.allowedMethods()])))
   }
   async start(port?: string) {
     this.server = this.koa.listen(port || config.app.port)

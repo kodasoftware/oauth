@@ -4,6 +4,7 @@ export interface AuthRecord {
   email: string,
   verified: boolean,
   stripe_customer_id: string,
+  untappd_token: string,
   password: string,
   salt: string,
   reset_token: string,
@@ -14,6 +15,7 @@ export interface AuthJson {
   name: string,
   email: string,
   stripe_customer_id: string,
+  untappd_token: string,
   verified: boolean,
   deleted: boolean,
 }

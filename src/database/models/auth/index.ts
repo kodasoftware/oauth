@@ -41,6 +41,7 @@ export class Auth extends Model<AuthRecord, AuthJson> {
         result.reset_token,
         result.stripe_customer_id,
         result.name,
+        result.untappd_token,
       )
     }
   }
@@ -55,6 +56,7 @@ export class Auth extends Model<AuthRecord, AuthJson> {
     public resetToken: string = null,
     public stripeCustomerId: string = null,
     public name: string = null,
+    public untappd_token: string = null,
   ) {
     super(Auth.TABLE, Auth.CONFLICTS, repository)
   }
@@ -70,6 +72,7 @@ export class Auth extends Model<AuthRecord, AuthJson> {
       deleted: this.deleted,
       reset_token: this.resetToken,
       stripe_customer_id: this.stripeCustomerId,
+      untappd_token: this.untappd_token,
     }
   }
 
@@ -78,6 +81,7 @@ export class Auth extends Model<AuthRecord, AuthJson> {
       name: this.name,
       email: this.email,
       stripe_customer_id: this.stripeCustomerId,
+      untappd_token: this.untappd_token,
       verified: this.verified,
       deleted: this.deleted,
     }
