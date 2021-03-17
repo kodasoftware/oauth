@@ -15,4 +15,4 @@ export async function seed(knex: Knex): Promise<any> {
       auth.name = 'Christian Shaw'
       return stripe.createCustomerForAuth(auth)
     })
-};
+}

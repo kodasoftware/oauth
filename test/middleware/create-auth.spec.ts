@@ -19,6 +19,9 @@ describe('createAuthMiddleware', () => {
   before(async () => {
     server = await koa.listen(config.app.port)
     nock(/stripe/i)
+      .get(/v1\/customers/i).reply(200, (uri, body, callback) => {
+        callback(null, [])
+      })
       .post(/v1\/customers/i).reply(201, (uri, body, callback) => {
         callback(null, { id: 'cus_' + CHANCE.string() })
       })
@@ -28,7 +31,7 @@ describe('createAuthMiddleware', () => {
     nock.cleanAll()
   })
 
-  it('should return 201 for valid name, email password', async () => {
+  it.skip('should return 201 for valid name, email, password (removed)', async () => {
     const name = CHANCE.name({ full: true })
     const email = CHANCE.email()
     const password = 'BlueJ4ys@'

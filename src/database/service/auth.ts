@@ -215,25 +215,24 @@ export class AuthService {
   public async createInviteForEmail(auth: Auth, email: string, token: string): Promise<AuthServiceResponse> {
     try {
       const isAUser = !!(await Auth.find(email)(this.repository))
-      let invitee = await Invitee.findByEmail(email)(this.repository)
+      const invitee = await Invitee.findByEmail(email)(this.repository)
       const isAlreadyInvited = !!(invitee)
 
       if (isAUser || (isAlreadyInvited && invitee.active)) {
         return { status: 409, error: 'The user is already invited' }
       }
-      
+
       if (isAlreadyInvited && !invitee.active) {
         invitee.inviter_id = auth.id,
         invitee.active = true
         await invitee.save()
         return { status: 200 }
       }
-      
+
       await Invitee.create(auth, email, token)(this.repository)
       return { status: 201 }
 
     } catch (err) {
-      console.error(err)
       logger.error(err)
       return { status: err.statusCode || 500, error: err.error || err.message || err } as any
     }

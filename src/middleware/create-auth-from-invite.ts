@@ -36,8 +36,9 @@ export default compose<ServicesContext>([
     ctx.status = inviteResponse.status
     if (inviteResponse.status !== 200 || (inviteResponse.invite && !inviteResponse.invite.active)) {
       if (inviteResponse.error) ctx.body = inviteResponse.error
-      if (inviteResponse.invite && !inviteResponse.invite.active)
+      if (inviteResponse.invite && !inviteResponse.invite.active) {
         ctx.body = 'This invitation has expired or has already been used'
+      }
       return
     }
 

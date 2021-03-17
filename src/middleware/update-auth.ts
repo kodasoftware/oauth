@@ -46,11 +46,10 @@ export default compose<ServicesContextWithAuthorization>([
     await auth.save()
     ctx.status = 200
     if (newEmail || newName) {
-      if (!auth.stripeCustomerId) await ctx.services.stripe.createCustomerForAuth(auth)
-      const { status: s, error: e } = await ctx.services.stripe.updateCustomerFromAuth(auth)
-      logger.trace({ s, e }, 'update')
-      if (s !== 200) ctx.status = s
-      if (e) ctx.body = e
+      let res
+      if (!auth.stripeCustomerId) (res = await ctx.services.stripe.createCustomerForAuth(auth))
+      else (res = await ctx.services.stripe.updateCustomerFromAuth(auth))
+      ctx.status = [200, 201].includes(res.status) ? 200 : res.status
     }
   }
 ])

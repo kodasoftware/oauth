@@ -24,6 +24,9 @@ describe('updateAuthMiddleware', () => {
   before(() => {
     server = APP.listen(config.app.port)
     nock(/stripe/i)
+      .get(/v1\/customers/i).reply(200, (uri, body, callback) => {
+        callback(null, { data: [] })
+      })
       .post(/v1\/customers\/.?/i).reply(200, (uri, body, callback) => {
         callback(null, { id: 'cus_' + CHANCE.string() })
       })
