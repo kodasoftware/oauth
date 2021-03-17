@@ -9,6 +9,7 @@ RUN npm set progress=false && \
     npm config set depth 0
 RUN npm i
 RUN npm run compile
+RUN ls build
 
 
 ####### Runtime #######
@@ -22,5 +23,7 @@ RUN npm set progress=false && \
     npm config set depth 0 && \
     npm i --production
 RUN chmod -R +x /opt/app/scripts
+
+RUN ls
 
 CMD ["/bin/sh", "./scripts/run.sh"]
