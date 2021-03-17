@@ -11,6 +11,7 @@ export interface TokenServiceResponse {
   refreshExpiry?: number,
   resetToken?: string,
   resetExpiry?: number,
+  inviteToken?: string,
   error?: any,
 }
 
@@ -45,10 +46,20 @@ export default class TokenService {
         email: auth.email,
         exp: resetExpiry,
         sub: auth.id,
-      }, config.crypto.secret)
+      }, config.jwt.secret)
       auth.resetToken = resetToken
       await auth.save()
       return { status: 200, resetToken, resetExpiry }
+    } catch (err) {
+      logger.error(err)
+      return { status: err.statusCode || err.status || 500, error: err.error || err.message || err }
+    }
+  }
+
+  public async createInviteToken(email: string): Promise<TokenServiceResponse> {
+    try {
+      const inviteToken = await jwt.sign({ sub: email }, config.jwt.secret)
+      return { status: 201, inviteToken }
     } catch (err) {
       logger.error(err)
       return { status: err.statusCode || err.status || 500, error: err.error || err.message || err }

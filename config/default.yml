@@ -27,13 +27,13 @@ facebook:
   secret: your-facebook-secret
   token: your-facebook-token
 
-stripe:
-  apiKey: stripe-api-key
-
 untappd:
   host: https://api.untappd.com/v4
   clientId: untappd-client-id
   clientSecret: untappd-client-secret
+
+stripe:
+  apiKey: stripe-api-key
 
 database:
   client: pg

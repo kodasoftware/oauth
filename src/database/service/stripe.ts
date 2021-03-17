@@ -20,7 +20,8 @@ export class StripeService {
   }
   public async createCustomerForAuth(auth: Auth): Promise<StripeServiceResponse> {
     try {
-      const customer = await this.stripe.customers.create({
+      const customers = await this.stripe.customers.list({ email: auth.email })
+      const customer = (customers.data.length > 0) ? customers.data[0] : await this.stripe.customers.create({
         email: auth.email,
         name: auth.name,
         metadata: { auth_id: auth.id, deleted: auth.deleted ? 1 : 0 }

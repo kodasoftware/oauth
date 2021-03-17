@@ -34,6 +34,5 @@ export default compose<ServicesContext>([
       ctx.status = 500
       return
     }
-    ctx.status = 200
   }
 ])

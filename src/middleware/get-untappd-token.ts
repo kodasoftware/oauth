@@ -46,7 +46,7 @@ export default compose([
       return
     }
     ctx.redirect('https://untappd.com/oauth/authenticate/?client_id=' + config.untappd.clientId +
-      '&response_type=code&' +
-      'redirect_url=' + config.app.host + config.app.prefix + '/untappd/confirm')
+      '&response_type=code' +
+      '&redirect_url=' + config.app.host + config.app.prefix + '/untappd')
   },
 ])
