@@ -9,7 +9,6 @@ RUN npm set progress=false && \
     npm config set depth 0
 RUN npm i
 RUN npm run compile
-RUN ls build
 
 
 ####### Runtime #######
@@ -24,6 +23,6 @@ RUN npm set progress=false && \
     npm i --production
 RUN chmod -R +x /opt/app/scripts
 
-RUN ls
+RUN rm knexfile.ts
 
 CMD ["/bin/sh", "./scripts/run.sh"]
