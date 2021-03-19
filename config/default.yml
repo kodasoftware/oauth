@@ -42,9 +42,9 @@ database:
     # filename: ./test/testdb.sqlite
     host: localhost
     port: 5432
-    user: oauth
+    user: hopcoop
     password: root
-    database: oauth
+    database: hopcoop
   pool:
     min: 1
     max: 2

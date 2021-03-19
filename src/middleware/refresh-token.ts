@@ -2,13 +2,14 @@ import { ServicesContext } from './context'
 import config from '../config'
 
 export default async function refreshTokenMiddleware(ctx: ServicesContext) {
+  const [, accessToken] = 'authorization' in ctx.headers ? ctx.headers.authorization.split(' ') : []
   const refreshToken = ctx.cookies.get('refresh_token', config.cookie.opts)
-  if (!refreshToken) {
+  if (!refreshToken && !accessToken) {
     ctx.status = 401
     return
   }
 
-  const verified = await ctx.services.token.verifyToken(refreshToken)
+  const verified = await ctx.services.token.verifyToken(refreshToken || accessToken)
   if (!verified) {
     ctx.status = 401
     return
