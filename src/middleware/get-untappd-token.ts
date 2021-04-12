@@ -27,6 +27,7 @@ export default compose([
         }
         ctx.state.auth = user
         ctx.state.user = authResponse.auth
+        ctx.state.token = _jwt
       } catch (err) {
         ctx.status = 401
         ctx.body = err.message
@@ -41,12 +42,14 @@ export default compose([
   },
   async function getUntappdToken(ctx: ServicesContextWithAuthorization) {
     const auth = ctx.state.user
+    const token = ctx.state.token
     if (auth.untappd_token) {
       ctx.redirect(ctx.request.headers.referer + 'account?token=' + auth.untappd_token)
       return
     }
     ctx.redirect('https://untappd.com/oauth/authenticate/?client_id=' + config.untappd.clientId +
       '&response_type=code' +
-      '&redirect_url=' + config.app.host + config.app.prefix + '/untappd')
+      '&state=' + token +
+      '&redirect_url=' + config.app.host + config.app.prefix + '/untappd/confirm')
   },
 ])

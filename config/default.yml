@@ -1,5 +1,6 @@
 app:
   name: oAuth API
+  ui_host: http://localhost:3000
   host: http://localhost:9000
   port: 9000
   prefix: ''

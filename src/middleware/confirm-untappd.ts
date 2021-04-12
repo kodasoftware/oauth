@@ -8,46 +8,42 @@ import { AuthJson } from '../database'
 import config from '../config'
 
 export default compose([
+  requestValidationForSchema({
+    type: 'object',
+    properties: {
+      code: { type: 'string', minLength: 10 },
+      state: { type: 'string', minLength: 10 },
+    },
+    required: ['code', 'state']
+  }),
   async (ctx: Context & ServicesContext, next) => {
-    const _jwt = ctx.cookies.get('HOPCO_AUTHUSER')
-    if (!_jwt) {
+    const { code, state } = ctx.request.query
+    if (!code || !state ) {
       ctx.status = 401
       return
     }
-    if (_jwt.length > 0) {
-      try {
-        const user = await jwt.verify(_jwt, config.jwt.secret) as AuthJson & { sub: string, iat: number, exp: number }
-        const authResponse = await ctx.services.auth.getAuthFromIdEmail(user.sub, user.email)
-        if (authResponse.status !== 200) {
-          ctx.status = authResponse.status
-          if (authResponse.error) ctx.body = authResponse.error
-          return
-        }
-        if (!authResponse.auth || authResponse.auth.deleted) {
-          ctx.status = 401
-          return
-        }
-        ctx.state.auth = user
-        ctx.state.user = authResponse.auth
-      } catch (err) {
-        ctx.status = 401
-        ctx.body = err.message
+    try {
+      const user = await jwt.verify(state, config.jwt.secret) as AuthJson & { sub: string, iat: number, exp: number }
+      const authResponse = await ctx.services.auth.getAuthFromIdEmail(user.sub, user.email)
+      if (authResponse.status !== 200) {
+        ctx.status = authResponse.status
+        if (authResponse.error) ctx.body = authResponse.error
         return
       }
-    } else {
+      if (!authResponse.auth || authResponse.auth.deleted) {
+        ctx.status = 401
+        return
+      }
+      ctx.state.auth = user
+      ctx.state.user = authResponse.auth
+    } catch (err) {
       ctx.status = 401
+      ctx.body = err.message
       return
     }
 
     return next()
   },
-  requestValidationForSchema({
-    type: 'object',
-    properties: {
-      code: { type: 'string', minLength: 10 },
-    },
-    required: ['code']
-  }),
   async function confirmUntappdToken(ctx: ServicesContextWithAuthorization) {
     const auth = ctx.state.user
     const { code } = ctx.request.query
@@ -62,7 +58,7 @@ export default compose([
       )
         .then(({ response: { access_token } }) => ctx.services.auth.addUntappdTokenToAuth(auth, access_token))
         .then((res) => ctx.services.token.createTokenFromAuth(res.auth))
-      ctx.redirect(ctx.request.headers.referer + 'account?token=' + tokens.accessToken)
+      ctx.redirect(config.app.ui_host + '/account?token=' + tokens.accessToken)
     } catch(error) {
       ctx.status = 500
     }
