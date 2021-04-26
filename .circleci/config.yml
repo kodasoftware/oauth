@@ -14,15 +14,11 @@ workflows:
       - build
   publish:
     jobs:
-      - approve:
-          type: approval
+      - publish:
+          context: publish
           filters:
             branches:
               only: master
-      - publish:
-          context: publish
-          requires:
-            - approve
 
 # 
 # Jobs

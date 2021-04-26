@@ -7,9 +7,11 @@ import updateAuth from '../middleware/update-auth'
 import deleteAuth from '../middleware/delete-auth'
 import sendInvite from '../middleware/send-invite'
 import verifyInvite from '../middleware/verify-invite-token'
+import resetForgottenAuth from '../middleware/reset-forgotten-auth'
 
 const router = route('createAuth', 'post', '/', [createAuthFromInvite])
 route('getForgottenAuth', 'get', '/', [forgottenAuth], { router })
+route('getForgottenAuth', 'patch', '/', [resetForgottenAuth], { router })
 route('updateAuth', 'put', '/', [updateAuth], { router })
 route('deleteAuth', 'delete', '/', [deleteAuth], { router })
 route('inviteAuth', 'post', '/invites', [sendInvite], { router })

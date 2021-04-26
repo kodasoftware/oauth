@@ -191,6 +191,18 @@ export class AuthService {
     }
   }
 
+  public async updateForgottenAuth(auth: Auth, password: string): Promise<AuthServiceResponse> {
+    try {
+      const { salt, encrypted } = await this.encrypt(password)
+      auth.password = encrypted
+      auth.salt = salt
+      return { status: 200, auth }
+    } catch (err) {
+      logger.error(err)
+      return { status: err.statusCode || 400, error: err.error || err.message || err } as any
+    }
+  }
+
   public async verifyEmailExists(email: string): Promise<AuthServiceResponse> {
     try {
       const auth = await Auth.find(email)(this.repository)

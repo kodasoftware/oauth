@@ -10,12 +10,7 @@ export default compose<ServicesContext>([
     properties: {
       token: { type: 'string', minLength: 1 },
       name: { type: 'string', minLength: 1 },
-      password: {
-        type: 'string',
-        minLength: 6,
-        maxLength: 18,
-        pattern: '^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\\$%\\^&\\*])(?=.{6,18})',
-      },
+      password: { type: 'string', minLength: 1 },
       additionalProperties: true,
     },
     required: ['name', 'token', 'password'],

@@ -16,8 +16,8 @@ export default compose<ServicesContextWithAuthorization>([
     }, {
       type: 'object',
       properties: {
-        password: { type: 'string', pattern: '^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\\$%\\^&\\*])(?=.{6,18})' },
-        existing: { type: 'string', pattern: '^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\\$%\\^&\\*])(?=.{6,18})' },
+        password: { type: 'string', minLength: 1 },
+        existing: { type: 'string', minLength: 1 },
       },
       required: ['password', 'existing'],
     }]

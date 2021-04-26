@@ -9,11 +9,7 @@ export default compose<ServicesContext>([
       type: 'object',
       properties: {
         email: { type: 'string', format: 'email' },
-        password: {
-          type: 'string',
-          minLength: 6,
-          maxLength: 18,
-          pattern: '^(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[!@#\\$%\\^&\\*])(?=.{6,18})', },
+        password: { type: 'string', minLength: 1 },
       },
       required: ['email', 'password']
     }, {
