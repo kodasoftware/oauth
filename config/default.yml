@@ -85,3 +85,10 @@ pubsub:
     projectId: project-id
     apiEndpoint: localhost:8085
   topic: mail.generate
+
+email:
+  from: The Hop Co-op Brewmail <brewmail@thehopcoop.com>
+  invite:
+    subject: You've been invited to the join us!
+  forgotten:
+    subject: Here is your reset password link

@@ -24,11 +24,11 @@ export default compose<ServicesContextWithAuthorization>([
 
     const tokenRes = await ctx.services.token.createInviteToken(email)
     const data = {
-      from: `"Example App" <foo@example.com>`, // sender address
+      from: config.email.from, // sender address
       to: email,
-      subject: 'You have been invited to join our community!', // Subject line
-      text: tokenRes.inviteToken, // plain text body
-      html: tokenRes.inviteToken,
+      subject: config.email.invite.subject, // Subject line
+      text: `Your invite link https://dev.thehopcoop.com/join#${tokenRes.inviteToken}`, // plain text body
+      html: `<a href="https://dev.thehopcoop.com/join#${tokenRes.inviteToken}">Join The Hop Co-op</a>`,
     }
     const { status, error } = await ctx.services.auth.createInviteForEmail(user, email, tokenRes.inviteToken)
     ctx.status = status

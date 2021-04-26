@@ -23,11 +23,11 @@ export default compose<ServicesContext>([
     if (!resetResponse.resetToken) return
 
     const data = {
-      from: `"Example App" <foo@example.com>`, // sender address
+      from: config.email.from, // sender address
       to: auth.email,
-      subject: 'Forgotten Password Request', // Subject line
-      text: resetResponse.resetToken, // plain text body
-      html: resetResponse.resetToken,
+      subject: config.email.forgotten.subject, // Subject line
+      text: `Your reset token link http://dev.thehopcoop.com/reset-password#${resetResponse.resetToken}`,
+      html: `<a href="http://dev.thehopcoop.com/reset-password#${resetResponse.resetToken}">Reset your password</a>`,
     }
     const published = await google.publishMessageToPubSub(config.pubsub.topic, data)
     if (!published) {
